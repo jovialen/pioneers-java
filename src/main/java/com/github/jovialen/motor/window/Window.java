@@ -156,9 +156,14 @@ public class Window {
 
     public void setSize(Vector2i size) {
         this.size = size;
-        if (isOpen()) {
-            GLFW.glfwSetWindowSize(handle, size.x, size.y);
+        if (!isOpen()) return;
+
+        if (isFullscreen()) {
+            Logger.warn("Setting size for fullscreen window. Change video mode instead");
+            return;
         }
+
+        GLFW.glfwSetWindowSize(handle, size.x, size.y);
     }
 
     public Vector2i getSize() {
