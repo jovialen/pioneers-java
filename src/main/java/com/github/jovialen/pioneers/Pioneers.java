@@ -1,6 +1,7 @@
 package com.github.jovialen.pioneers;
 
 import com.github.jovialen.motor.core.Application;
+import com.github.jovialen.motor.window.Monitor;
 import com.github.jovialen.motor.window.WindowSizeEvent;
 import com.google.common.eventbus.Subscribe;
 import org.lwjgl.glfw.GLFW;
@@ -13,6 +14,7 @@ public class Pioneers extends Application {
 
     public Pioneers() {
         super(NAME);
+        window.setFullscreen(false);
     }
 
     public static void main(String[] args) {
