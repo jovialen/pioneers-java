@@ -39,7 +39,7 @@ public class Pioneers extends Application {
     private static class TinyLogGlfwErrorCallback extends GLFWErrorCallback {
         @Override
         public void invoke(int error, long description) {
-            Logger.error("GLFW Error {}: {}", error, getDescription(description));
+            Logger.tag("GLFW").error("GLFW Error {}: {}", error, getDescription(description));
         }
     }
 }

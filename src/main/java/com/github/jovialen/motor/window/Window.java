@@ -1,5 +1,6 @@
 package com.github.jovialen.motor.window;
 
+import com.github.jovialen.motor.render.GLContext;
 import com.github.jovialen.motor.utils.GLFWBoolean;
 import com.google.common.eventbus.EventBus;
 import org.joml.Vector2i;
@@ -12,6 +13,7 @@ import java.util.List;
 
 public class Window {
     private final EventBus eventBus;
+    private final GLFWBoolean debug;
 
     private long handle = MemoryUtil.NULL;
     private String title;
@@ -21,10 +23,12 @@ public class Window {
     private Vector2i size = null;
     private Vector2i position = null;
     private Monitor monitor = null;
+    private GLContext glContext;
 
-    public Window(EventBus eventBus, String title) {
+    public Window(EventBus eventBus, String title, boolean debug) {
         this.eventBus = eventBus;
         this.title = title;
+        this.debug = new GLFWBoolean(debug);
     }
 
     public boolean open() {
@@ -34,6 +38,11 @@ public class Window {
         GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, resizable.asGlfw());
         GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, decorated.asGlfw());
+        GLFW.glfwWindowHint(GLFW.GLFW_CLIENT_API, GLFW.GLFW_OPENGL_API);
+        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, GLContext.VERSION_MAJOR);
+        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, GLContext.VERSION_MINOR);
+        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_DEBUG, debug.asGlfw());
+        GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 
         if (size == null) {
             Logger.warn("No window size set. Selecting a fitting size");
@@ -87,6 +96,8 @@ public class Window {
             position.y = y;
         });
 
+        glContext = new GLContext(this);
+
         setVisible(visible);
         return true;
     }
@@ -96,6 +107,7 @@ public class Window {
         Logger.info("Closing window {}", title);
         GLFW.glfwDestroyWindow(handle);
         handle = MemoryUtil.NULL;
+        glContext = null;
     }
 
     public boolean isOpen() {
@@ -104,6 +116,10 @@ public class Window {
 
     public long getHandle() {
         return handle;
+    }
+
+    public GLContext getGlContext() {
+        return glContext;
     }
 
     public void setVisible(boolean visible) {
@@ -198,6 +214,10 @@ public class Window {
         return monitor;
     }
 
+    public boolean isDebug() {
+        return debug.get();
+    }
+
     public boolean shouldClose() {
         return !isOpen() || GLFW.glfwWindowShouldClose(handle);
     }
@@ -212,6 +232,10 @@ public class Window {
 
     public boolean isFullscreen() {
         return getMonitor() != null;
+    }
+
+    public void present() {
+        GLFW.glfwSwapBuffers(handle);
     }
 
     private Vector2i center() {
