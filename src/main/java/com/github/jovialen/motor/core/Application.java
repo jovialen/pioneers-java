@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import java.nio.file.Path;
+import java.util.List;
 
 public abstract class Application {
     public final String name;
@@ -50,8 +51,9 @@ public abstract class Application {
         indexBuffer.store(indices);
 
         bufferArray.setIndexBuffer(indexBuffer);
-        bufferArray.insert(0, vertexBuffer.getSlice(0, 20), BufferType.FLOAT2);
-        bufferArray.insert(1, vertexBuffer.getSlice(8, 20), BufferType.FLOAT3);
+        List<Buffer.Slice> slices = vertexBuffer.getSlices(BufferType.FLOAT2, BufferType.FLOAT3);
+        bufferArray.insert(0, slices.get(0), BufferType.FLOAT2);
+        bufferArray.insert(1, slices.get(1), BufferType.FLOAT3);
 
         ShaderProgram program = new ShaderProgram("Triangle Program");
         String shadersDir = Path.of("src", "main", "resources", "shaders").toString();

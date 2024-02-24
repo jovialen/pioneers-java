@@ -45,7 +45,8 @@ public class BufferArray {
     }
 
     public void insert(int index, Buffer.Slice slice, BufferType type) {
-        Logger.tag("GL").debug("Binding {} to {} at index {} with type {}", slice.buffer, this, index, type);
+        Logger.tag("GL").debug("Binding {} to {} at index {} with type {} (offset: {}, stride: {})",
+                slice.buffer, this, index, type, slice.offset, slice.stride);
 
         if (slice.buffer.getTarget() != GL20.GL_ARRAY_BUFFER) {
             Logger.tag("GL").warn("Buffer is not a vertex buffer. Proceeding with bind as vertex buffer");

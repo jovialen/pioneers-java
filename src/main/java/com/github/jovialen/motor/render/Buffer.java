@@ -6,6 +6,9 @@ import org.tinylog.Logger;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Buffer {
     public static class Slice {
@@ -131,5 +134,19 @@ public class Buffer {
 
     public Slice getSlice(int offset, int stride) {
         return new Slice(this, offset, stride);
+    }
+
+    public List<Slice> getSlices(BufferType... layout) {
+        List<Slice> slices = new ArrayList<>(layout.length);
+
+        int offset = 0;
+        int stride = Arrays.stream(layout).map(BufferType::getStride).reduce(0, Integer::sum);
+
+        for (BufferType attribute : layout) {
+            slices.add(getSlice(offset, stride));
+            offset += attribute.getStride();
+        }
+
+        return slices;
     }
 }
