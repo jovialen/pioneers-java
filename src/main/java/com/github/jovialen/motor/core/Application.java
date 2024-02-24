@@ -34,19 +34,21 @@ public abstract class Application {
         window.open();
         GLContext context = window.getGlContext();
 
-        Buffer vertexBuffer = new Buffer("Triangle Vertices", GL15.GL_ARRAY_BUFFER);
-        Buffer indexBuffer = new Buffer("Triangle Indices", GL15.GL_ELEMENT_ARRAY_BUFFER);
-        BufferArray bufferArray = new BufferArray("Triangle");
+        Buffer vertexBuffer = new Buffer("Quad Vertices", GL15.GL_ARRAY_BUFFER);
+        Buffer indexBuffer = new Buffer("Quad Indices", GL15.GL_ELEMENT_ARRAY_BUFFER);
+        BufferArray bufferArray = new BufferArray("Quad");
 
         float[] positions = {
-                 0.0f,  0.5f, 1.0f, 0.0f, 0.0f,
+                -0.5f,  0.5f, 1.0f, 0.0f, 1.0f,
+                 0.5f,  0.5f, 1.0f, 0.0f, 0.0f,
                 -0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
                  0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
         };
         vertexBuffer.store(positions);
 
         int[] indices = {
-                0, 1, 2
+                0, 2, 3,
+                1, 0, 3,
         };
         indexBuffer.store(indices);
 
@@ -55,14 +57,14 @@ public abstract class Application {
         bufferArray.insert(0, slices.get(0), BufferType.FLOAT2);
         bufferArray.insert(1, slices.get(1), BufferType.FLOAT3);
 
-        ShaderProgram program = new ShaderProgram("Triangle Program");
+        ShaderProgram program = new ShaderProgram("Quad Program");
         String shadersDir = Path.of("src", "main", "resources", "shaders").toString();
 
         Shader vertexShader = new Shader(GL20.GL_VERTEX_SHADER);
-        vertexShader.setSource(Path.of(shadersDir, "triangle.vs.glsl"));
+        vertexShader.setSource(Path.of(shadersDir, "quad.vs.glsl"));
 
         Shader fragmentShader = new Shader(GL20.GL_FRAGMENT_SHADER);
-        fragmentShader.setSource(Path.of(shadersDir, "triangle.fs.glsl"));
+        fragmentShader.setSource(Path.of(shadersDir, "quad.fs.glsl"));
 
         if (!fragmentShader.compile() || !vertexShader.compile()) {
             window.close();
@@ -89,7 +91,7 @@ public abstract class Application {
 
             program.use();
             bufferArray.bind();
-            GL11.glDrawElements(GL11.GL_TRIANGLES, 3, GL11.GL_UNSIGNED_INT, 0);
+            GL11.glDrawElements(GL11.GL_TRIANGLES, 6, GL11.GL_UNSIGNED_INT, 0);
 
             window.present();
             GLFW.glfwWaitEvents();

@@ -16,7 +16,7 @@ public class ShaderProgram {
     }
 
     public ShaderProgram(String debugName) {
-        Logger.tag("GL").debug("Creating shader program {}", debugName);
+        Logger.tag("GL").info("Creating shader program {}", debugName);
         this.debugName = debugName;
         id = GL20.glCreateProgram();
     }
@@ -28,7 +28,7 @@ public class ShaderProgram {
     }
 
     public void destroy() {
-        Logger.tag("GL").debug("Destroying shader program {}", debugName);
+        Logger.tag("GL").info("Destroying shader program {}", debugName);
         GL20.glDeleteProgram(id);
     }
 

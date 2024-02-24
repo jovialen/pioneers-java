@@ -24,7 +24,7 @@ public class Shader {
     }
 
     public Shader(String debugName, int type, String source) {
-        Logger.tag("GL").debug("Creating shader {}", debugName);
+        Logger.tag("GL").info("Creating shader {}", debugName);
         this.debugName = debugName;
         this.type = type;
         id = GL20.glCreateShader(type);
@@ -35,7 +35,7 @@ public class Shader {
     }
 
     public void destroy() {
-        Logger.tag("GL").debug("Destroying shader {}", debugName);
+        Logger.tag("GL").info("Destroying shader {}", debugName);
         GL20.glDeleteShader(id);
     }
 
