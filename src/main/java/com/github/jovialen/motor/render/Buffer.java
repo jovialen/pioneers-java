@@ -8,6 +8,18 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 public class Buffer {
+    public static class Slice {
+        public final Buffer buffer;
+        public final int offset;
+        public final int stride;
+
+        public Slice(Buffer buffer, int offset, int stride) {
+            this.buffer = buffer;
+            this.offset = offset;
+            this.stride = stride;
+        }
+    }
+
     private final int id;
     private final String debugName;
     private final int target;
@@ -115,5 +127,9 @@ public class Buffer {
 
     public int getSize() {
         return size;
+    }
+
+    public Slice getSlice(int offset, int stride) {
+        return new Slice(this, offset, stride);
     }
 }

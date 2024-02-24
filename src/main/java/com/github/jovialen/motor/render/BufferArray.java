@@ -41,20 +41,28 @@ public class BufferArray {
     }
 
     public void insert(int index, Buffer buffer, BufferType type) {
-        Logger.tag("GL").debug("Binding {} to {} at index {} with type {}", buffer, this, index, type);
+        insert(index, buffer.getSlice(0, type.getStride()), type);
+    }
+
+    public void insert(int index, Buffer.Slice slice, BufferType type) {
+        Logger.tag("GL").debug("Binding {} to {} at index {} with type {}", slice.buffer, this, index, type);
+
+        if (slice.buffer.getTarget() != GL20.GL_ARRAY_BUFFER) {
+            Logger.tag("GL").warn("Buffer is not a vertex buffer. Proceeding with bind as vertex buffer");
+        }
 
         bind();
-        buffer.bind();
+        slice.buffer.bind(GL20.GL_ARRAY_BUFFER);
 
         GL20.glEnableVertexAttribArray(index);
         GL20.glVertexAttribPointer(index,
                 type.getComponentCount(),
                 type.getGlType(),
                 false,
-                type.getStride(),
-                0);
+                slice.stride,
+                slice.offset);
 
-        buffer.unbind();
+        slice.buffer.unbind(GL20.GL_ARRAY_BUFFER);
         unbind();
     }
 

@@ -33,24 +33,16 @@ public abstract class Application {
         window.open();
         GLContext context = window.getGlContext();
 
-        Buffer positionBuffer = new Buffer("Triangle Positions", GL15.GL_ARRAY_BUFFER);
-        Buffer colorBuffer = new Buffer("Triangle Colors", GL15.GL_ARRAY_BUFFER);
+        Buffer vertexBuffer = new Buffer("Triangle Vertices", GL15.GL_ARRAY_BUFFER);
         Buffer indexBuffer = new Buffer("Triangle Indices", GL15.GL_ELEMENT_ARRAY_BUFFER);
         BufferArray bufferArray = new BufferArray("Triangle");
 
         float[] positions = {
-                0.0f, 0.5f,
-                -0.5f, -0.5f,
-                0.5f, -0.5f,
+                 0.0f,  0.5f, 1.0f, 0.0f, 0.0f,
+                -0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+                 0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
         };
-        positionBuffer.store(positions);
-
-        float[] colors = {
-                1.0f, 0.0f, 0.0f,
-                0.0f, 1.0f, 0.0f,
-                0.0f, 0.0f, 1.0f,
-        };
-        colorBuffer.store(colors);
+        vertexBuffer.store(positions);
 
         int[] indices = {
                 0, 1, 2
@@ -58,8 +50,8 @@ public abstract class Application {
         indexBuffer.store(indices);
 
         bufferArray.setIndexBuffer(indexBuffer);
-        bufferArray.insert(0, positionBuffer, BufferType.FLOAT2);
-        bufferArray.insert(1, colorBuffer, BufferType.FLOAT3);
+        bufferArray.insert(0, vertexBuffer.getSlice(0, 20), BufferType.FLOAT2);
+        bufferArray.insert(1, vertexBuffer.getSlice(8, 20), BufferType.FLOAT3);
 
         ShaderProgram program = new ShaderProgram("Triangle Program");
         String shadersDir = Path.of("src", "main", "resources", "shaders").toString();
@@ -105,8 +97,7 @@ public abstract class Application {
         program.destroy();
 
         bufferArray.destroy();
-        positionBuffer.destroy();
-        colorBuffer.destroy();
+        vertexBuffer.destroy();
         indexBuffer.destroy();
 
         window.close();
