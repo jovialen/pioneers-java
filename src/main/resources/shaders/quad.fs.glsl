@@ -1,9 +1,11 @@
 #version 430 core
 
-in vec3 pColor;
+in vec2 pUv;
 
 out vec4 oColor;
 
+uniform sampler2D uTexture;
+
 void main() {
-    oColor = vec4(pColor, 1.0);
+    oColor = texture(uTexture, pUv);
 }

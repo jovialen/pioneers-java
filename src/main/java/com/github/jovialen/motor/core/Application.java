@@ -39,10 +39,10 @@ public abstract class Application {
         BufferArray bufferArray = new BufferArray("Quad");
 
         float[] positions = {
-                -0.5f,  0.5f, 1.0f, 0.0f, 1.0f,
-                 0.5f,  0.5f, 1.0f, 0.0f, 0.0f,
-                -0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-                 0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
+                -0.5f,  0.5f, 0.0f, 1.0f,
+                 0.5f,  0.5f, 1.0f, 1.0f,
+                -0.5f, -0.5f, 0.0f, 0.0f,
+                 0.5f, -0.5f, 1.0f, 0.0f,
         };
         vertexBuffer.store(positions);
 
@@ -53,9 +53,9 @@ public abstract class Application {
         indexBuffer.store(indices);
 
         bufferArray.setIndexBuffer(indexBuffer);
-        List<Buffer.Slice> slices = vertexBuffer.getSlices(BufferType.FLOAT2, BufferType.FLOAT3);
+        List<Buffer.Slice> slices = vertexBuffer.getSlices(BufferType.FLOAT2, BufferType.FLOAT2);
         bufferArray.insert(0, slices.get(0), BufferType.FLOAT2);
-        bufferArray.insert(1, slices.get(1), BufferType.FLOAT3);
+        bufferArray.insert(1, slices.get(1), BufferType.FLOAT2);
 
         ShaderProgram program = new ShaderProgram("Quad Program");
         String shadersDir = Path.of("src", "main", "resources", "shaders").toString();
@@ -81,6 +81,10 @@ public abstract class Application {
         vertexShader.destroy();
         fragmentShader.destroy();
 
+        String texturesDir = Path.of("src", "main", "resources", "textures").toString();
+        Texture2D texture = new Texture2D("OpenGL Logo");
+        texture.store(Path.of(texturesDir, "opengl-logo.png"));
+
         window.setVisible(true);
         while (window.isOpen() && !window.shouldClose()) {
             Vector2i size = window.getSize();
@@ -89,8 +93,12 @@ public abstract class Application {
             GL11.glClearColor(1, 1, 1, 1);
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
             program.use();
             bufferArray.bind();
+            texture.bind();
             GL11.glDrawElements(GL11.GL_TRIANGLES, 6, GL11.GL_UNSIGNED_INT, 0);
 
             window.present();

@@ -7,6 +7,7 @@ import com.google.common.eventbus.Subscribe;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWErrorCallbackI;
+import org.lwjgl.stb.STBImage;
 import org.tinylog.Logger;
 
 public class Pioneers extends Application {
@@ -22,6 +23,8 @@ public class Pioneers extends Application {
 
         GLFW.glfwSetErrorCallback(new TinyLogGlfwErrorCallback());
         GLFW.glfwInit();
+
+        STBImage.stbi_set_flip_vertically_on_load(true);
 
         Pioneers app = new Pioneers();
         app.run();
