@@ -13,8 +13,6 @@ import org.lwjgl.system.MemoryUtil;
 import org.tinylog.Logger;
 import org.tinylog.TaggedLogger;
 
-import javax.print.attribute.standard.Severity;
-
 public class GLContext {
     private static class TinyLogGLDebugMessageCallback extends GLDebugMessageCallback {
         @Override

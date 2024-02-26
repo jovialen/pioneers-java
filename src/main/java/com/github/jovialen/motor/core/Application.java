@@ -1,6 +1,5 @@
 package com.github.jovialen.motor.core;
 
-import com.github.jovialen.motor.render.gl.Shader;
 import com.github.jovialen.motor.render.gl.*;
 import com.github.jovialen.motor.render.mesh.Mesh;
 import com.github.jovialen.motor.render.mesh.Vertex;
@@ -11,13 +10,10 @@ import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public abstract class Application {
     public final String name;
