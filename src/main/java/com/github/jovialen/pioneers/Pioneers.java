@@ -1,5 +1,6 @@
 package com.github.jovialen.pioneers;
 
+import com.github.jovialen.motor.Motor;
 import com.github.jovialen.motor.core.Application;
 import com.github.jovialen.motor.window.Monitor;
 import com.github.jovialen.motor.window.WindowSizeEvent;
@@ -19,30 +20,11 @@ public class Pioneers extends Application {
     }
 
     public static void main(String[] args) {
-        Thread.setDefaultUncaughtExceptionHandler(new TinyLogUncaughtExceptionHandler());
-
-        GLFW.glfwSetErrorCallback(new TinyLogGlfwErrorCallback());
-        GLFW.glfwInit();
-
-        STBImage.stbi_set_flip_vertically_on_load(true);
+        Motor.init();
 
         Pioneers app = new Pioneers();
         app.run();
 
-        GLFW.glfwTerminate();
-    }
-
-    private static class TinyLogUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
-        @Override
-        public void uncaughtException(Thread t, Throwable e) {
-            Logger.error(e);
-        }
-    }
-
-    private static class TinyLogGlfwErrorCallback extends GLFWErrorCallback {
-        @Override
-        public void invoke(int error, long description) {
-            Logger.tag("GLFW").error("GLFW Error {}: {}", error, getDescription(description));
-        }
+        Motor.shutdown();
     }
 }
