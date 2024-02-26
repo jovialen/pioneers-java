@@ -1,4 +1,4 @@
-package com.github.jovialen.motor.render;
+package com.github.jovialen.motor.render.gl;
 
 import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;

@@ -1,4 +1,4 @@
-package com.github.jovialen.motor.render;
+package com.github.jovialen.motor.render.gl;
 
 import com.github.jovialen.motor.utils.gl.GLBoolean;
 import org.lwjgl.opengl.GL20;

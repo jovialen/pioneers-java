@@ -1,4 +1,4 @@
-package com.github.jovialen.motor.render;
+package com.github.jovialen.motor.render.gl;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL15;
@@ -20,6 +20,27 @@ public class Buffer {
             this.buffer = buffer;
             this.offset = offset;
             this.stride = stride;
+        }
+    }
+
+    public static class IndexBuffer extends Buffer {
+
+        public IndexBuffer() {
+            super(GL15.GL_ELEMENT_ARRAY_BUFFER);
+        }
+
+        public IndexBuffer(String debugName) {
+            super(debugName, GL15.GL_ELEMENT_ARRAY_BUFFER);
+        }
+    }
+
+    public static class VertexBuffer extends Buffer {
+        public VertexBuffer() {
+            super(GL15.GL_ARRAY_BUFFER);
+        }
+
+        public VertexBuffer(String debugName) {
+            super(debugName, GL15.GL_ARRAY_BUFFER);
         }
     }
 

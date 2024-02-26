@@ -1,4 +1,4 @@
-package com.github.jovialen.motor.render;
+package com.github.jovialen.motor.render.gl;
 
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.stb.STBImage;

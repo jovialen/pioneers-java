@@ -1,6 +1,6 @@
 package com.github.jovialen.motor.window;
 
-import com.github.jovialen.motor.render.GLContext;
+import com.github.jovialen.motor.render.gl.GLContext;
 import com.github.jovialen.motor.utils.GLFWBoolean;
 import com.google.common.eventbus.EventBus;
 import org.joml.Vector2i;

@@ -1,15 +1,22 @@
 package com.github.jovialen.motor.core;
 
-import com.github.jovialen.motor.render.*;
+import com.github.jovialen.motor.render.gl.Shader;
+import com.github.jovialen.motor.render.gl.*;
+import com.github.jovialen.motor.render.mesh.Mesh;
+import com.github.jovialen.motor.render.mesh.Vertex;
 import com.github.jovialen.motor.window.Window;
 import com.google.common.eventbus.EventBus;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class Application {
@@ -34,28 +41,14 @@ public abstract class Application {
         window.open();
         GLContext context = window.getGlContext();
 
-        Buffer vertexBuffer = new Buffer("Quad Vertices", GL15.GL_ARRAY_BUFFER);
-        Buffer indexBuffer = new Buffer("Quad Indices", GL15.GL_ELEMENT_ARRAY_BUFFER);
-        BufferArray bufferArray = new BufferArray("Quad");
+        Mesh mesh = new Mesh("Quad Mesh");
+        mesh.vertices.add(new Vertex(new Vector3f(-0.5f,  0.5f, 0.0f), new Vector2f(0.0f, 1.0f)));
+        mesh.vertices.add(new Vertex(new Vector3f(0.5f,  0.5f, 0.0f), new Vector2f(1.0f, 1.0f)));
+        mesh.vertices.add(new Vertex(new Vector3f(-0.5f, -0.5f, 0.0f), new Vector2f(0.0f, 0.0f)));
+        mesh.vertices.add(new Vertex(new Vector3f(0.5f, -0.5f, 0.0f), new Vector2f(1.0f, 0.0f)));
+        mesh.indices = Arrays.asList(0, 2, 3, 1, 0, 3);
 
-        float[] positions = {
-                -0.5f,  0.5f, 0.0f, 1.0f,
-                 0.5f,  0.5f, 1.0f, 1.0f,
-                -0.5f, -0.5f, 0.0f, 0.0f,
-                 0.5f, -0.5f, 1.0f, 0.0f,
-        };
-        vertexBuffer.store(positions);
-
-        int[] indices = {
-                0, 2, 3,
-                1, 0, 3,
-        };
-        indexBuffer.store(indices);
-
-        bufferArray.setIndexBuffer(indexBuffer);
-        List<Buffer.Slice> slices = vertexBuffer.getSlices(BufferType.FLOAT2, BufferType.FLOAT2);
-        bufferArray.insert(0, slices.get(0), BufferType.FLOAT2);
-        bufferArray.insert(1, slices.get(1), BufferType.FLOAT2);
+        BufferArray bufferArray = mesh.build();
 
         ShaderProgram program = new ShaderProgram("Quad Program");
         String shadersDir = Path.of("src", "main", "resources", "shaders").toString();
@@ -109,8 +102,6 @@ public abstract class Application {
         program.destroy();
 
         bufferArray.destroy();
-        vertexBuffer.destroy();
-        indexBuffer.destroy();
 
         window.close();
     }
