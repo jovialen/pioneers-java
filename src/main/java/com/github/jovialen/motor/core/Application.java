@@ -1,6 +1,8 @@
 package com.github.jovialen.motor.core;
 
 import com.github.jovialen.motor.render.gl.*;
+import com.github.jovialen.motor.render.image.FileImage;
+import com.github.jovialen.motor.render.image.NetImage;
 import com.github.jovialen.motor.render.mesh.Mesh;
 import com.github.jovialen.motor.render.mesh.Vertex;
 import com.github.jovialen.motor.window.Window;
@@ -12,6 +14,8 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
+import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.Arrays;
 
@@ -35,7 +39,6 @@ public abstract class Application {
     public void run() {
         window.setVisible(false);
         window.open();
-        GLContext context = window.getGlContext();
 
         Mesh mesh = new Mesh("Quad Mesh");
         mesh.vertices.add(new Vertex(new Vector3f(-0.5f,  0.5f, 0.0f), new Vector2f(0.0f, 1.0f)));
@@ -71,8 +74,13 @@ public abstract class Application {
         fragmentShader.destroy();
 
         String texturesDir = Path.of("src", "main", "resources", "textures").toString();
-        Texture2D texture = new Texture2D("OpenGL Logo");
-        texture.store(Path.of(texturesDir, "opengl-logo.png"));
+        // FileImage openglImage = new FileImage("OpenGL Logo", Path.of(texturesDir, "opengl-logo.png"));
+        NetImage openglImage = NetImage.create("https://cdn.freebiesupply.com/logos/large/2x/opengl-1-logo-png-transparent.png");
+        if (openglImage == null) {
+            window.close();
+            return;
+        }
+        Texture2D texture = openglImage.build();
 
         window.setVisible(true);
         while (window.isOpen() && !window.shouldClose()) {
@@ -95,9 +103,9 @@ public abstract class Application {
         }
         window.setVisible(false);
 
-        program.destroy();
-
         bufferArray.destroy();
+        texture.destroy();
+        program.destroy();
 
         window.close();
     }
