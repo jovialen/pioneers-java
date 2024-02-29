@@ -4,6 +4,7 @@ import com.github.jovialen.motor.render.gl.*;
 import com.github.jovialen.motor.render.image.FileImage;
 import com.github.jovialen.motor.render.image.NetImage;
 import com.github.jovialen.motor.render.mesh.Mesh;
+import com.github.jovialen.motor.render.mesh.MeshBuffer;
 import com.github.jovialen.motor.render.mesh.Vertex;
 import com.github.jovialen.motor.window.Window;
 import com.google.common.eventbus.EventBus;
@@ -47,7 +48,7 @@ public abstract class Application {
         mesh.vertices.add(new Vertex(new Vector3f(0.5f, -0.5f, 0.0f), new Vector2f(1.0f, 0.0f)));
         mesh.indices = Arrays.asList(0, 2, 3, 1, 0, 3);
 
-        BufferArray bufferArray = mesh.build();
+        MeshBuffer meshBuffer = mesh.build();
 
         ShaderProgram program = new ShaderProgram("Quad Program");
         String shadersDir = Path.of("src", "main", "resources", "shaders").toString();
@@ -94,7 +95,7 @@ public abstract class Application {
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
             program.use();
-            bufferArray.bind();
+            meshBuffer.bind();
             texture.bind();
             GL11.glDrawElements(GL11.GL_TRIANGLES, 6, GL11.GL_UNSIGNED_INT, 0);
 
@@ -103,7 +104,7 @@ public abstract class Application {
         }
         window.setVisible(false);
 
-        bufferArray.destroy();
+        meshBuffer.destroy();
         texture.destroy();
         program.destroy();
 

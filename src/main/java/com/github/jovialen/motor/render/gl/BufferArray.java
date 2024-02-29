@@ -12,8 +12,6 @@ public class BufferArray {
     private final int id;
     private final String debugName;
 
-    private List<Buffer> ownedBuffers = new ArrayList<>();
-
     public BufferArray() {
         this("");
     }
@@ -27,7 +25,6 @@ public class BufferArray {
     public void destroy() {
         Logger.tag("GL").info("Destroying buffer array {}", debugName);
 
-        ownedBuffers.forEach(Buffer::destroy);
         GL30.glDeleteVertexArrays(id);
     }
 
@@ -40,15 +37,7 @@ public class BufferArray {
     }
 
     public void setIndexBuffer(Buffer indexBuffer) {
-        setIndexBuffer(indexBuffer, false);
-    }
-
-    public void setIndexBuffer(Buffer indexBuffer, boolean own) {
         Logger.tag("GL").debug("Setting index buffer of {} to {}", this, indexBuffer);
-
-        if (own && !ownedBuffers.contains(indexBuffer)) {
-            ownedBuffers.add(indexBuffer);
-        }
 
         if (indexBuffer.getTarget() != GL20.GL_ELEMENT_ARRAY_BUFFER) {
             Logger.tag("GL").warn("Buffer is not a vertex buffer. Proceeding with bind as vertex buffer");
@@ -60,24 +49,12 @@ public class BufferArray {
     }
 
     public void insert(int index, Buffer buffer, BufferType type) {
-        insert(index, buffer.getSlice(0, type.getStride()), type, false);
-    }
-
-    public void insert(int index, Buffer buffer, BufferType type, boolean own) {
-        insert(index, buffer.getSlice(0, type.getStride()), type, own);
+        insert(index, buffer.getSlice(0, type.getStride()), type);
     }
 
     public void insert(int index, Buffer.Slice slice, BufferType type) {
-        insert(index, slice, type, false);
-    }
-
-    public void insert(int index, Buffer.Slice slice, BufferType type, boolean own) {
         Logger.tag("GL").debug("Binding {} to {} at index {} with type {} (offset: {}, stride: {})",
                 slice.buffer, this, index, type, slice.offset, slice.stride);
-
-        if (own && !ownedBuffers.contains(slice.buffer)) {
-            ownedBuffers.add(slice.buffer);
-        }
 
         if (slice.buffer.getTarget() != GL20.GL_ARRAY_BUFFER) {
             Logger.tag("GL").warn("Buffer is not a vertex buffer. Proceeding with bind as vertex buffer");
