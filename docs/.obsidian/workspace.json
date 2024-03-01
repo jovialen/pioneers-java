@@ -21,7 +21,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "scene/Scene Graph.md",
+                "file": "Application.md",
                 "mode": "source",
                 "source": false
               }
@@ -152,6 +152,11 @@
   },
   "active": "e79af146d8a686b1",
   "lastOpenFiles": [
+    "Application.md",
+    "scene/Scene.md",
+    "scene/Main Scene Graph.md",
+    "scene/Local Scene Graph.md",
+    "scene/Scene Node.md",
     "scene/Scene Graph.md",
     "render/Render Graph.md",
     "scene",
