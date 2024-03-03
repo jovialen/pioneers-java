@@ -73,6 +73,10 @@ public class GLContext {
         GLFW.glfwMakeContextCurrent(contextWindow.getHandle());
     }
 
+    public void flush() {
+        contextWindow.present();
+    }
+
     public Window getContextWindow() {
         return contextWindow;
     }

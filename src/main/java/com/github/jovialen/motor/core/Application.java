@@ -8,6 +8,7 @@ import com.github.jovialen.motor.render.mesh.MeshBuffer;
 import com.github.jovialen.motor.render.mesh.Vertex;
 import com.github.jovialen.motor.scene.Scene;
 import com.github.jovialen.motor.scene.SceneNode;
+import com.github.jovialen.motor.scene.SceneRenderer;
 import com.github.jovialen.motor.window.Window;
 import com.google.common.eventbus.EventBus;
 import org.joml.Vector2f;
@@ -43,6 +44,8 @@ public abstract class Application {
     }
 
     public void run() {
+        Logger.tag("APP").info("Starting app {}", name);
+
         if (scene == null) {
             Logger.tag("APP").error("No scene is set");
         }
@@ -50,14 +53,18 @@ public abstract class Application {
         window.setVisible(false);
         window.open();
 
+        SceneRenderer renderer = new SceneRenderer(window.getGlContext());
+
         window.setVisible(true);
-        while (window.isOpen() && !window.shouldClose()) {
-            window.present();
-            GLFW.glfwWaitEvents();
+        while (window.isOpen() && !window.shouldClose() && scene != null && scene.hasChildren()) {
+            scene.update();
+            renderer.submit(scene);
+            GLFW.glfwPollEvents();
         }
-        window.setVisible(false);
 
         window.close();
+
+        Logger.tag("APP").info("App {} finished running", name);
     }
 
     protected void setScene(Scene scene) {
