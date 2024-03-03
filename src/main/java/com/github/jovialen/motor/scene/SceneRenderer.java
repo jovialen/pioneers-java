@@ -18,7 +18,7 @@ public class SceneRenderer {
 
         List<Camera3DNode> cameras = root.getChildrenOfClass(Camera3DNode.class);
         for (Camera3DNode camera : cameras) {
-            GL11.glClearColor(camera.clearColor.x, camera.clearColor.y, camera.clearColor.y, camera.clearColor.w);
+            GL11.glClearColor(camera.clearColor.x, camera.clearColor.y, camera.clearColor.z, camera.clearColor.w);
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         }
 
