@@ -8,7 +8,7 @@
         "type": "tabs",
         "children": [
           {
-            "id": "e79af146d8a686b1",
+            "id": "17ab6ff02dc7a1ee",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -16,12 +16,12 @@
             }
           },
           {
-            "id": "17ab6ff02dc7a1ee",
+            "id": "ede193207e90a305",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "scene/Scene Node.md",
+                "file": "Application.md",
                 "mode": "source",
                 "source": false
               }
@@ -33,14 +33,14 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Application.md",
+                "file": "scene/Scene Node.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -167,14 +167,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "17ab6ff02dc7a1ee",
+  "active": "5d3bbad9ba52f48d",
   "lastOpenFiles": [
-    "Application.md",
-    "scene/Scene.md",
-    "scene/Main Scene Graph.md",
     "scene/Local Scene Graph.md",
-    "scene/Scene Node.md",
+    "scene/Main Scene Graph.md",
+    "scene/Scene.md",
+    "Application.md",
     "scene/Scene Graph.md",
+    "scene/Scene Node.md",
     "render/Render Graph.md",
     "scene",
     "render",
