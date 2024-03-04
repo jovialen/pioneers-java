@@ -32,5 +32,6 @@ The stages of the graph node are the main way to implement logic for the nodes. 
 | Post-process | Called once per frame right after the process stage. Is called first for all the children, then for the parent.   |
 | Stop         | Called once when the node is removed from the scene graph. Is called first for the parent, then for the children. |
 | Post-stop    | Called once after the stop stage. Is called first for the children, then for the parent.                          |
+| Sync         | Called once per frame when synchronizing with the renderer. Called first for the parent, then the children.       |
 
 **NB:** In order to prevent unintended errors, no node should be removed from the tree in the middle of any of these stages. As such, removing elements from the tree should be handled after all the process stages have completed. This can be achieved by queuing the nodes that should be removed in a list that is resolved at the end of each frame.
