@@ -10,8 +10,6 @@ import com.google.common.eventbus.Subscribe;
 import org.lwjgl.glfw.GLFW;
 import org.tinylog.Logger;
 
-import java.time.Duration;
-
 public abstract class Application {
     private final String name;
     private final boolean debug;
@@ -51,8 +49,17 @@ public abstract class Application {
     }
 
     public void setScene(Scene scene) {
+        if (this.scene != null && running) {
+            Logger.tag("APP").info("Unloading scene {}", this.scene);
+            this.scene.stop();
+        }
+
         Logger.tag("APP").info("Loading scene {}", scene);
         this.scene = scene.instantiate();
+
+        if (running) {
+            this.scene.start();
+        }
     }
 
     public SceneNode getScene() {
@@ -94,12 +101,18 @@ public abstract class Application {
         }
 
         renderer = new SceneRenderer(window.getGlContext());
+        scene.start();
 
         window.setVisible(true);
         running = true;
     }
 
     private void stop() {
+        if (scene != null) {
+            Logger.tag("APP").info("Unloading scene {}", scene);
+            scene.stop();
+        }
+
         window.setVisible(false);
 
         renderer.destroy();
