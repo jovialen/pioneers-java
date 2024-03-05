@@ -47,7 +47,8 @@ public class GLContext {
 
     private final Window contextWindow;
     private final boolean debug;
-    private final GLCapabilities glCapabilities;
+
+    private GLCapabilities glCapabilities;
 
     public GLContext(Window contextWindow) {
         Logger.tag("GL").info("Creating OpenGL Context");
@@ -55,8 +56,7 @@ public class GLContext {
         this.contextWindow = contextWindow;
         this.debug = contextWindow.isDebug();
 
-        GLFW.glfwMakeContextCurrent(contextWindow.getHandle());
-        glCapabilities = GL.createCapabilities();
+        activate();
 
         if (debug) {
             Logger.tag("GL").debug("Configuring OpenGL debug message callback");
@@ -67,10 +67,18 @@ public class GLContext {
                     0,
                     true);
         }
+
+        deactivate();
     }
 
     public void activate() {
         GLFW.glfwMakeContextCurrent(contextWindow.getHandle());
+        glCapabilities = GL.createCapabilities();
+    }
+
+    public void deactivate() {
+        GLFW.glfwMakeContextCurrent(0);
+        glCapabilities = null;
     }
 
     public void flush() {

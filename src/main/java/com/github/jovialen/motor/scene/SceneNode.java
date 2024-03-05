@@ -18,20 +18,29 @@ public class SceneNode {
         parent = null;
     }
 
-    public void update() {
-        preProcess();
-        children.forEach(SceneNode::preProcess);
-
-        process();
-        children.forEach(SceneNode::process);
-
-        children.forEach(SceneNode::postProcess);
-        postProcess();
+    public void start() {
+        children.forEach(SceneNode::start);
     }
 
-    protected void preProcess() {}
-    protected void process() {}
-    protected void postProcess() {}
+    public void sync() {
+        children.forEach(SceneNode::sync);
+    }
+
+    public void preProcess() {
+        children.forEach(SceneNode::preProcess);
+    }
+
+    public void process() {
+        children.forEach(SceneNode::process);
+    }
+
+    public void postProcess() {
+        children.forEach(SceneNode::postProcess);
+    }
+
+    public void stop() {
+        children.forEach(SceneNode::stop);
+    }
 
     public SceneNode getRoot() {
         return root;

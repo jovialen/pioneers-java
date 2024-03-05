@@ -9,7 +9,6 @@ public class Pioneers extends Application {
 
     public Pioneers() {
         super(NAME);
-        window.setFullscreen(false);
         setScene(new MainScene());
     }
 

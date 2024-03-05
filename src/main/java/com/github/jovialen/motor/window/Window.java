@@ -2,6 +2,8 @@ package com.github.jovialen.motor.window;
 
 import com.github.jovialen.motor.render.gl.GLContext;
 import com.github.jovialen.motor.utils.GLFWBoolean;
+import com.github.jovialen.motor.window.events.WindowCloseEvent;
+import com.github.jovialen.motor.window.events.WindowSizeEvent;
 import com.google.common.eventbus.EventBus;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;

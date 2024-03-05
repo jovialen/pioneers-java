@@ -1,5 +1,6 @@
-package com.github.jovialen.motor.window;
+package com.github.jovialen.motor.window.events;
 
+import com.github.jovialen.motor.window.Window;
 import org.joml.Vector2i;
 
 public class WindowSizeEvent extends WindowEvent {
