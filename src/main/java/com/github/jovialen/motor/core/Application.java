@@ -141,9 +141,6 @@ public abstract class Application {
     }
 
     private void sync() {
-        // Wait for render to be complete
-        renderThread.waitIdle();
-
         // Queue synchronization after render
         renderThread.addTask(new RendererSynchronizationTask(renderer, scene));
 
