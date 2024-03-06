@@ -3,6 +3,11 @@ package com.github.jovialen.motor.core;
 import com.github.jovialen.motor.scene.Scene;
 import com.github.jovialen.motor.scene.SceneNode;
 import com.github.jovialen.motor.scene.SceneRenderer;
+import com.github.jovialen.motor.scene.tasks.ActivateContextTask;
+import com.github.jovialen.motor.scene.tasks.DeactivateContextTask;
+import com.github.jovialen.motor.scene.tasks.RenderTask;
+import com.github.jovialen.motor.scene.tasks.RendererSynchronizationTask;
+import com.github.jovialen.motor.threads.JobThread;
 import com.github.jovialen.motor.window.Window;
 import com.github.jovialen.motor.window.events.WindowCloseEvent;
 import com.google.common.eventbus.EventBus;
@@ -18,6 +23,7 @@ public abstract class Application {
     private final Window window;
 
     private boolean running = false;
+    private JobThread renderThread;
     private SceneRenderer renderer;
     private SceneNode scene;
 
@@ -101,7 +107,12 @@ public abstract class Application {
         }
 
         renderer = new SceneRenderer(window.getGlContext());
+
+        renderThread = new JobThread();
+        renderThread.addTask(new ActivateContextTask(renderer));
+
         scene.start();
+        renderThread.start();
 
         window.setVisible(true);
         running = true;
@@ -115,7 +126,14 @@ public abstract class Application {
 
         window.setVisible(false);
 
-        renderer.destroy();
+        renderThread.addTask(new DeactivateContextTask(renderer));
+        renderThread.waitIdle();
+        renderThread.stopWorking();
+        try {
+            renderThread.join();
+        } catch (InterruptedException e) {
+            Logger.tag("APP").error("Failed to join with the render thread: {}", e);
+        }
 
         window.close();
 
@@ -123,18 +141,26 @@ public abstract class Application {
     }
 
     private void sync() {
-        // Synchronize renderer with scene
+        // Wait for render to be complete
+        renderThread.waitIdle();
+
+        // Queue synchronization after render
+        renderThread.addTask(new RendererSynchronizationTask(renderer, scene));
+
+        // Wait for sync to be complete
+        renderThread.waitIdle();
+
+        // Poll events
         GLFW.glfwWaitEvents();
-        renderer.sync(scene);
     }
 
     private void process() {
+        // Start render
+        renderThread.addTask(new RenderTask(renderer));
+
         // Update scene
         scene.preProcess();
         scene.process();
         scene.postProcess();
-
-        // Start render
-        renderer.render();
     }
 }

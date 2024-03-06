@@ -1,6 +1,7 @@
 package com.github.jovialen.motor.scene;
 
 import com.github.jovialen.motor.render.gl.GLContext;
+import com.github.jovialen.motor.scene.SceneNode;
 import com.github.jovialen.motor.scene.nodes.Camera3DNode;
 import org.lwjgl.opengl.GL11;
 
@@ -13,11 +14,6 @@ public class SceneRenderer {
 
     public SceneRenderer(GLContext context) {
         this.context = context;
-        context.activate();
-    }
-
-    public void destroy() {
-        context.deactivate();
     }
 
     public void sync(SceneNode root) {
@@ -33,5 +29,9 @@ public class SceneRenderer {
         }
 
         context.flush();
+    }
+
+    public GLContext getContext() {
+        return context;
     }
 }
