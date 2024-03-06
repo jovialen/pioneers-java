@@ -7,6 +7,7 @@ import java.util.Queue;
 
 public class JobThread extends Thread {
     private boolean working = true;
+    private boolean executingTask = false;
     private final Queue<ThreadTask> tasks = new ArrayDeque<>();
 
     @Override
@@ -37,7 +38,7 @@ public class JobThread extends Thread {
 
     public void waitIdle() {
         synchronized (tasks) {
-            while (!tasks.isEmpty()) {
+            while (!tasks.isEmpty() || executingTask) {
                 waitNotified();
             }
         }
@@ -70,7 +71,10 @@ public class JobThread extends Thread {
     private void executeTask(ThreadTask task) {
         if (task == null) return;
 
+        executingTask = true;
         task.invoke();
+        executingTask = false;
+
         synchronized (tasks) {
             tasks.notifyAll();
         }
