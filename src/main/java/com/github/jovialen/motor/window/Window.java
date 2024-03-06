@@ -35,7 +35,7 @@ public class Window {
 
     public boolean open() {
         if (isOpen()) return true;
-        Logger.info("Opening window {}", title);
+        Logger.tag("WINDOW").info("Opening window {}", title);
 
         GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, resizable.asGlfw());
@@ -47,16 +47,16 @@ public class Window {
         GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 
         if (size == null) {
-            Logger.warn("No window size set. Selecting a fitting size");
+            Logger.tag("WINDOW").warn("No window size set. Selecting a fitting size");
             List<GLFWVidMode> videoModes = Monitor.getPrimary().getVideoModes();
             if (videoModes.isEmpty()) {
-                Logger.warn("No video modes found. Selecting explicit starting size");
+                Logger.tag("WINDOW").warn("No video modes found. Selecting explicit starting size");
                 size = new Vector2i(600, 400);
             } else {
                 GLFWVidMode smallest = videoModes.getFirst();
                 size = new Vector2i(smallest.width(), smallest.height());
             }
-            Logger.debug("Selected window size is {}x{}", size.x, size.y);
+            Logger.tag("WINDOW").debug("Selected window size is {}x{}", size.x, size.y);
         }
 
         Vector2i size = getSize();
@@ -73,7 +73,7 @@ public class Window {
 
         handle = GLFW.glfwCreateWindow(size.x, size.y, title, monitor, MemoryUtil.NULL);
         if (!isOpen()) {
-            Logger.error("Failed to open window");
+            Logger.tag("WINDOW").error("Failed to open window");
             return false;
         }
 
@@ -83,11 +83,11 @@ public class Window {
         setPosition(position);
 
         GLFW.glfwSetWindowCloseCallback(handle, (long win) -> {
-            Logger.debug("Window {} has recieved a close request", title);
+            Logger.tag("WINDOW").debug("Window {} has recieved a close request", title);
             eventBus.post(new WindowCloseEvent(this));
         });
         GLFW.glfwSetWindowSizeCallback(handle, (long win, int w, int h) -> {
-            Logger.debug("Window {} resized to {}x{}", title, w, h);
+            Logger.tag("WINDOW").debug("Window {} resized to {}x{}", title, w, h);
             Vector2i newSize = new Vector2i(w, h);
             eventBus.post(new WindowSizeEvent(this, newSize, size));
             size.x = w;
@@ -106,7 +106,7 @@ public class Window {
 
     public void close() {
         if (!isOpen()) return;
-        Logger.info("Closing window {}", title);
+        Logger.tag("WINDOW").info("Closing window {}", title);
         GLFW.glfwDestroyWindow(handle);
         handle = MemoryUtil.NULL;
         glContext = null;
@@ -177,7 +177,7 @@ public class Window {
         if (!isOpen()) return;
 
         if (isFullscreen()) {
-            Logger.warn("Setting size for fullscreen window. Change video mode instead");
+            Logger.tag("WINDOW").warn("Setting size for fullscreen window. Change video mode instead");
             return;
         }
 

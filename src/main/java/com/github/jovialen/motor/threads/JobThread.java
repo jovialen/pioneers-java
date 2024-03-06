@@ -12,14 +12,14 @@ public class JobThread extends Thread {
 
     @Override
     public void run() {
-        Logger.tag("APP").info("Starting thread worker");
+        Logger.tag("THREAD").info("Starting thread worker");
 
         while (working) {
             ThreadTask task = getTask();
             executeTask(task);
         }
 
-        Logger.tag("APP").info("Thread worker exited");
+        Logger.tag("THREAD").info("Thread worker exited");
     }
 
     public void stopWorking() {
@@ -63,7 +63,7 @@ public class JobThread extends Thread {
             try {
                 tasks.wait();
             } catch (InterruptedException e) {
-                Logger.tag("APP").error("Failed to wait for task: {}", e);
+                Logger.tag("THREAD").error("Failed to wait for task: {}", e);
             }
         }
     }
