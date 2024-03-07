@@ -1,7 +1,9 @@
 package com.github.jovialen.motor.scene.nodes;
 
 import com.github.jovialen.motor.scene.SceneNode;
+import org.joml.Matrix4f;
 import org.joml.Quaterniond;
+import org.joml.Quaternionfc;
 import org.joml.Vector3f;
 
 /**
@@ -43,5 +45,20 @@ public class Node3D extends SceneNode {
             globalScale = globalScale.add(parent.scale);
         }
         return globalScale;
+    }
+
+    public Matrix4f getTransform(Matrix4f matrix4f) {
+        matrix4f.translate(position);
+        matrix4f.rotate((Quaternionfc) rotation);
+        matrix4f.scale(scale);
+        return matrix4f;
+    }
+
+    public Matrix4f getGlobalTransform(Matrix4f matrix4f) {
+        matrix4f = getTransform(matrix4f);
+        for (Node3D parent : getParentsOfClass(Node3D.class, false)) {
+            matrix4f = parent.getTransform(matrix4f);
+        }
+        return matrix4f;
     }
 }

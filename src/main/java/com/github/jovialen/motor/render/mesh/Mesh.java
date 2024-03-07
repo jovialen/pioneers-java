@@ -1,11 +1,7 @@
 package com.github.jovialen.motor.render.mesh;
 
-import com.github.jovialen.motor.render.gl.Buffer;
-import com.github.jovialen.motor.render.gl.BufferArray;
-import org.lwjgl.BufferUtils;
 import org.tinylog.Logger;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
