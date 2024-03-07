@@ -5,6 +5,9 @@ import org.tinylog.Logger;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+/**
+ * A thread that can queue tasks to perform.
+ */
 public class JobThread extends Thread {
     private boolean working = true;
     private boolean executingTask = false;
@@ -19,16 +22,24 @@ public class JobThread extends Thread {
             executeTask(task);
         }
 
-        Logger.tag("THREAD").info("Thread worker exited");
+        Logger.tag("THREAD").info("Thread worker stopped");
     }
 
+    /**
+     * Stop working and exit the thread as soon as possible.
+     */
     public void stopWorking() {
+        Logger.tag("THREAD").debug("Stopping thread worker");
         working = false;
         synchronized (tasks) {
             tasks.notifyAll();
         }
     }
 
+    /**
+     * Add a task to be carried out.
+     * @param task Task to queue.
+     */
     public void addTask(ThreadTask task) {
         synchronized (tasks) {
             tasks.add(task);
@@ -36,6 +47,9 @@ public class JobThread extends Thread {
         }
     }
 
+    /**
+     * Wait until the thread worker has no more tasks to perform.
+     */
     public void waitIdle() {
         synchronized (tasks) {
             while (!tasks.isEmpty() || executingTask) {

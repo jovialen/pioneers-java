@@ -2,6 +2,9 @@ package com.github.jovialen.motor.scene.tasks;
 
 import com.github.jovialen.motor.scene.SceneRenderer;
 
+/**
+ * Perform a single render.
+ */
 public class RenderTask extends SceneRendererTask {
     public RenderTask(SceneRenderer sceneRenderer) {
         super(sceneRenderer);

@@ -3,6 +3,9 @@ package com.github.jovialen.motor.scene.tasks;
 import com.github.jovialen.motor.scene.SceneNode;
 import com.github.jovialen.motor.scene.SceneRenderer;
 
+/**
+ * Synchronize the renderer with the given scene graph.
+ */
 public class RendererSynchronizationTask extends SceneRendererTask {
     private final SceneNode root;
 

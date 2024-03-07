@@ -8,6 +8,9 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Renderer for a scene graph.
+ */
 public class SceneRenderer {
     private final GLContext context;
     private List<Camera3DNode> cameras = new ArrayList<>();
@@ -16,12 +19,21 @@ public class SceneRenderer {
         this.context = context;
     }
 
+    /**
+     * Synchronize the renderer with a scene graph.
+     * @param root Root of the scene graph to synchronize with.
+     */
     public void sync(SceneNode root) {
         root.sync();
 
         cameras = root.getChildrenOfClass(Camera3DNode.class);
     }
 
+    /**
+     * Render the scene graph the renderer last synchronized with.
+     *
+     * To update the render, the scene graph must be re-synchronized.
+     */
     public void render() {
         for (Camera3DNode camera : cameras) {
             GL11.glClearColor(camera.clearColor.x, camera.clearColor.y, camera.clearColor.z, camera.clearColor.w);
