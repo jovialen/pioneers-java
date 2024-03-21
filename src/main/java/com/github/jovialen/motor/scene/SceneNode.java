@@ -10,19 +10,14 @@ import java.util.Optional;
  * Base class for any node in the scene graph.
  */
 public class SceneNode {
-    SceneNode root;
-    SceneNode localRoot;
+    SceneRoot root;
+    SceneRoot localRoot;
     SceneNode parent;
     final List<SceneNode> children = new ArrayList<>();
 
-    public SceneNode() {
-        root = this;
-        localRoot = this;
-        parent = null;
-    }
-
     /**
-     * Called once when the node is added to the scene graph.
+     * Called once when the node is added to the scene graph. This stage is not
+     * called on the render thread.
      */
     public void start() {
         children.forEach(SceneNode::start);
@@ -35,9 +30,12 @@ public class SceneNode {
      * It is in this stage that any rendering resources should be created or
      * updated before the renderer accesses them. This is because this is the
      * only stage guaranteed to be called on the same thread as the renderer.
+     *
      */
-    public void sync() {
-        children.forEach(SceneNode::sync);
+    public void sync(SceneRenderer renderer) {
+        for (SceneNode node : children) {
+            node.sync(renderer);
+        }
     }
 
     /**
@@ -63,6 +61,9 @@ public class SceneNode {
 
     /**
      * Called once when the node is removed from the scene graph.
+     *
+     * This stage will be run on a thread that will take ownership of the
+     * render context before calling it.
      */
     public void stop() {
         children.forEach(SceneNode::stop);
@@ -72,7 +73,7 @@ public class SceneNode {
      * Get the root of the entire scene graph.
      * @return Root of the scene graph.
      */
-    public SceneNode getRoot() {
+    public SceneRoot getRoot() {
         return root;
     }
 
@@ -84,7 +85,7 @@ public class SceneNode {
      * Get the root of the scene which this node was created from or in.
      * @return Root of the local scene graph.
      */
-    public SceneNode getLocalRoot() {
+    public SceneRoot getLocalRoot() {
         return localRoot;
     }
 
@@ -175,10 +176,15 @@ public class SceneNode {
      */
     public SceneNode addChild(Scene localScene) {
         Logger.tag("SCENE").debug("Instantiating local scene {} as child of {}", localScene, this);
-        SceneNode localRoot = localScene.instantiate();
-        localRoot.root = root;
+
+        SceneRoot localRoot = localScene.instantiate();
         localRoot.parent = this;
+        localRoot.root = root;
+        localRoot.localRoot = localRoot;
+        updateChildren();
+
         children.add(localRoot);
+
         localRoot.start();
         return localRoot;
     }
@@ -190,12 +196,25 @@ public class SceneNode {
      */
     public <T extends SceneNode> T addChild(T node) {
         Logger.tag("SCENE").debug("Adding child {} to {}", node, this);
+
         node.root = root;
         node.localRoot = localRoot;
         node.parent = this;
+        node.updateChildren();
+        
         children.add(node);
+
         node.start();
         return node;
+    }
+
+    void updateChildren() {
+        for (SceneNode child : children) {
+            child.parent = this;
+            child.root = root;
+            child.localRoot = localRoot;
+            child.updateChildren();
+        }
     }
 
     private <T> void addChildrenOfClass(Class<T> tClass, List<T> children, int maxDepth, boolean breakOnOther) {

@@ -11,14 +11,14 @@ public abstract class Scene {
      * @param root Root node for the scene to instantiate in.
      * @return Should always be the same as the root parameter.
      */
-    public abstract SceneNode instantiate(SceneNode root);
+    public abstract SceneRoot instantiate(SceneRoot root);
 
     /**
      * Create and return the scene graph.
      * @return Root node of the scene graph.
      */
-    public SceneNode instantiate() {
-        SceneNode root = instantiate(new SceneNode());
+    public SceneRoot instantiate() {
+        SceneRoot root = instantiate(new SceneRoot());
         if (root.hasParent()) {
             Logger.tag("SCENE").warn("Root node of main scene has parent. Was the correct node returned?");
         }

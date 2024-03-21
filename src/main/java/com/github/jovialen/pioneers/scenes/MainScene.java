@@ -4,6 +4,7 @@ import com.github.jovialen.motor.render.mesh.Mesh;
 import com.github.jovialen.motor.render.mesh.Vertex;
 import com.github.jovialen.motor.scene.Scene;
 import com.github.jovialen.motor.scene.SceneNode;
+import com.github.jovialen.motor.scene.SceneRoot;
 import com.github.jovialen.motor.scene.nodes.Camera3DNode;
 import com.github.jovialen.motor.scene.nodes.MeshNode;
 import org.joml.Vector3f;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class MainScene extends Scene {
     @Override
-    public SceneNode instantiate(SceneNode root) {
+    public SceneRoot instantiate(SceneRoot root) {
         Camera3DNode camera = root.addChild(new Camera3DNode());
         camera.clearColor = new Vector4f(1, 0, 0, 1);
 

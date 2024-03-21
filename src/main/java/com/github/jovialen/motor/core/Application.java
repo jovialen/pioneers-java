@@ -3,6 +3,7 @@ package com.github.jovialen.motor.core;
 import com.github.jovialen.motor.scene.Scene;
 import com.github.jovialen.motor.scene.SceneNode;
 import com.github.jovialen.motor.scene.SceneRenderer;
+import com.github.jovialen.motor.scene.SceneRoot;
 import com.github.jovialen.motor.scene.tasks.ActivateContextTask;
 import com.github.jovialen.motor.scene.tasks.DeactivateContextTask;
 import com.github.jovialen.motor.scene.tasks.RenderTask;
@@ -25,7 +26,7 @@ public abstract class Application {
     private boolean running = false;
     private JobThread renderThread;
     private SceneRenderer renderer;
-    private SceneNode scene;
+    private SceneRoot scene;
 
     protected Application(String name) {
         this(name, false);

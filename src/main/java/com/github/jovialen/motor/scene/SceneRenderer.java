@@ -27,8 +27,8 @@ public class SceneRenderer {
      * Synchronize the renderer with a scene graph.
      * @param root Root of the scene graph to synchronize with.
      */
-    public void sync(SceneNode root) {
-        root.sync();
+    public void sync(SceneRoot root) {
+        root.sync(this);
 
         cameras = root.getChildrenOfClass(Camera3DNode.class);
         meshes = root.getChildrenOfClass(MeshNode.class);
