@@ -2,8 +2,8 @@ package com.github.jovialen.motor.core;
 
 import com.github.jovialen.motor.scene.Scene;
 import com.github.jovialen.motor.scene.SceneNode;
-import com.github.jovialen.motor.scene.SceneRenderer;
 import com.github.jovialen.motor.scene.SceneRoot;
+import com.github.jovialen.motor.scene.renderer.SceneRenderer;
 import com.github.jovialen.motor.scene.tasks.ActivateContextTask;
 import com.github.jovialen.motor.scene.tasks.DeactivateContextTask;
 import com.github.jovialen.motor.scene.tasks.RenderTask;
@@ -52,21 +52,22 @@ public abstract class Application {
 
     @Subscribe
     public void onWindowClose(WindowCloseEvent event) {
+        if (event.window != window) return;
         running = false;
     }
 
     public void setScene(Scene scene) {
-        if (this.scene != null && running) {
-            Logger.tag("APP").info("Unloading scene {}", this.scene);
-            this.scene.stop();
-        }
-
         Logger.tag("APP").info("Loading scene {}", scene);
-        this.scene = scene.instantiate();
 
-        if (running) {
-            this.scene.start();
+        if (!running) {
+            this.scene = scene.instantiate(this);
+            return;
         }
+
+        unloadScene();
+
+        this.scene = scene.instantiate(this);
+        this.scene.start();
     }
 
     public SceneNode getScene() {
@@ -93,6 +94,12 @@ public abstract class Application {
         return running;
     }
 
+    private void unloadScene() {
+        if (scene == null) return;
+        Logger.tag("APP").info("Unloading scene {}", this.scene);
+        stopNodeAndChildren(scene);
+    }
+
     private void start() {
         Logger.tag("APP").info("Starting app {}", name);
 
@@ -101,32 +108,32 @@ public abstract class Application {
             return;
         }
 
+        // Open the window
         window.setVisible(false);
         if (!window.open()) {
             Logger.tag("APP").error("Failed to open window");
             return;
         }
 
+        // Set up the renderer
         renderer = new SceneRenderer(window.getGlContext());
 
         renderThread = new JobThread();
         renderThread.addTask(new ActivateContextTask(renderer));
 
+        // Start the scene
         scene.start();
         renderThread.start();
 
+        // Finalize
         window.setVisible(true);
         running = true;
     }
 
     private void stop() {
-        if (scene != null) {
-            Logger.tag("APP").info("Unloading scene {}", scene);
-            scene.stop();
-        }
-
         window.setVisible(false);
 
+        // Stop the render thread
         renderThread.addTask(new DeactivateContextTask(renderer));
         renderThread.waitIdle();
         renderThread.stopWorking();
@@ -135,9 +142,15 @@ public abstract class Application {
         } catch (InterruptedException e) {
             Logger.tag("APP").error("Failed to join with the render thread: {}", e);
         }
+        renderThread = null;
 
+        renderer.destroy();
+
+        // Unload the scene
+        unloadScene();
+
+        // Close
         window.close();
-
         Logger.tag("APP").info("App {} finished running", name);
     }
 
@@ -160,5 +173,28 @@ public abstract class Application {
         scene.preProcess();
         scene.process();
         scene.postProcess();
+    }
+
+    private void stopNodeAndChildren(SceneNode node) {
+        // No need to worry about the render thread if its disabled
+        if (renderThread == null) {
+            renderer.getContext().activate();
+            node.stop();
+            renderer.getContext().deactivate();
+            return;
+        }
+
+        // Take ownership of the render context on this thread
+        renderThread.addTask(new DeactivateContextTask(renderer));
+        renderThread.waitIdle();
+        renderer.getContext().activate();
+
+        // Stop the node and its children
+        node.stop();
+        renderer.invalidate();
+
+        // Give ownership back to the render thread
+        renderer.getContext().deactivate();
+        renderThread.addTask(new ActivateContextTask(renderer));
     }
 }

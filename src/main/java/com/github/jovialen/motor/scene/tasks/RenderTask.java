@@ -1,6 +1,6 @@
 package com.github.jovialen.motor.scene.tasks;
 
-import com.github.jovialen.motor.scene.SceneRenderer;
+import com.github.jovialen.motor.scene.renderer.SceneRenderer;
 
 /**
  * Perform a single render.

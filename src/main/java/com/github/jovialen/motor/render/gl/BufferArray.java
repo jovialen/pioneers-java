@@ -5,9 +5,6 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BufferArray {
     private final int id;
     private final String debugName;

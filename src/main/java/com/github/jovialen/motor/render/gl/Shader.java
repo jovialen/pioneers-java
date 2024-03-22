@@ -20,16 +20,24 @@ public class Shader {
     }
 
     public Shader(String debugName, int type) {
-        this(debugName, type, null);
-    }
-
-    public Shader(String debugName, int type, String source) {
         Logger.tag("GL").info("Creating shader {}", debugName);
         this.debugName = debugName;
         this.type = type;
         id = GL20.glCreateShader(type);
+    }
+
+    public Shader(String debugName, int type, String source) {
+        this(debugName, type);
         if (source != null) {
             setSource(source);
+            compile();
+        }
+    }
+
+    public Shader(String debugName, int type, Path path) {
+        this(debugName, type);
+        if (path != null) {
+            setSource(path);
             compile();
         }
     }

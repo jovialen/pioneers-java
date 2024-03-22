@@ -33,10 +33,20 @@ public class Texture2D {
     }
 
     public void bind() {
-        GL20.glBindTexture(GL20.GL_TEXTURE_2D, id);
+        bind(0);
     }
 
     public void unbind() {
+        unbind(0);
+    }
+
+    public void bind(int slot) {
+        GL20.glActiveTexture(GL20.GL_TEXTURE0 + slot);
+        GL20.glBindTexture(GL20.GL_TEXTURE_2D, id);
+    }
+
+    public void unbind(int slot) {
+        GL20.glActiveTexture(GL20.GL_TEXTURE0 + slot);
         GL20.glBindTexture(GL20.GL_TEXTURE_2D, 0);
     }
 

@@ -1,5 +1,6 @@
 package com.github.jovialen.motor.scene;
 
+import com.github.jovialen.motor.core.Application;
 import org.tinylog.Logger;
 
 /**
@@ -17,8 +18,8 @@ public abstract class Scene {
      * Create and return the scene graph.
      * @return Root node of the scene graph.
      */
-    public SceneRoot instantiate() {
-        SceneRoot root = instantiate(new SceneRoot());
+    public SceneRoot instantiate(Application application) {
+        SceneRoot root = instantiate(new SceneRoot(application));
         if (root.hasParent()) {
             Logger.tag("SCENE").warn("Root node of main scene has parent. Was the correct node returned?");
         }

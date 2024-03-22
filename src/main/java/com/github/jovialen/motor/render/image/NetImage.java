@@ -7,10 +7,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.tinylog.Logger;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;

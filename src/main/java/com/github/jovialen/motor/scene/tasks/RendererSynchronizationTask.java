@@ -1,8 +1,7 @@
 package com.github.jovialen.motor.scene.tasks;
 
-import com.github.jovialen.motor.scene.SceneNode;
-import com.github.jovialen.motor.scene.SceneRenderer;
 import com.github.jovialen.motor.scene.SceneRoot;
+import com.github.jovialen.motor.scene.renderer.SceneRenderer;
 
 /**
  * Synchronize the renderer with the given scene graph.

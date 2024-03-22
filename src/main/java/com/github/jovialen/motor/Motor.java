@@ -23,6 +23,7 @@ public class Motor {
         @Override
         public void uncaughtException(Thread t, Throwable e) {
             Logger.error(e);
+            System.exit(-1);
         }
     }
 

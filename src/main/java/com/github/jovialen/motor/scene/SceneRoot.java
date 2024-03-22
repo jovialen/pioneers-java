@@ -6,7 +6,14 @@ import com.google.common.eventbus.EventBus;
 import org.tinylog.Logger;
 
 public class SceneRoot extends SceneNode {
-    private Application application;
+    private final Application application;
+
+    public SceneRoot(Application application) {
+        this.application = application;
+        this.root = this;
+        this.localRoot = this;
+        this.parent = null;
+    }
 
     public Application getApplication() {
         return application;
@@ -19,7 +26,7 @@ public class SceneRoot extends SceneNode {
     public Window getWindow() {
         return application.getWindow();
     }
-    
+
     public void switchScene(Scene scene) {
         if (!isRoot()) {
             Logger.tag("SCENE").warn("Switching scene from local scene root, not root.");
