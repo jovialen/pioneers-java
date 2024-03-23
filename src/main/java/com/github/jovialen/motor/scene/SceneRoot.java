@@ -32,4 +32,8 @@ public class SceneRoot extends SceneNode {
     public EventBus getEventBus() {
         return application.getEventBus();
     }
+
+    public double getDeltaTime() {
+        return application.getClock().getDeltaTime();
+    }
 }
