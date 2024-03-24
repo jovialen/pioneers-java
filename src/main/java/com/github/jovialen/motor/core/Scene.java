@@ -32,13 +32,12 @@ public class Scene {
         this.application = application;
         this.renderThread = application.getRenderThread();
         this.sceneRoot = source.instantiate(new SceneRoot(application));
-
-        application.getEventBus().register(this);
     }
 
     public void start() {
         sceneRoot.start();
         shouldRebuildRenderGraph();
+        application.getEventBus().register(this);
     }
 
     public void update(double deltaTime) {
@@ -69,6 +68,7 @@ public class Scene {
     }
 
     public void stop() {
+        application.getEventBus().unregister(this);
         destroyRenderGraph();
         sceneRoot.stop();
     }
