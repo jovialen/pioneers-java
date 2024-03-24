@@ -1,6 +1,7 @@
 package com.github.jovialen.motor.graph.scene;
 
 import com.github.jovialen.motor.core.Application;
+import com.github.jovialen.motor.core.Scene;
 import com.github.jovialen.motor.window.Window;
 import com.google.common.eventbus.EventBus;
 
@@ -15,10 +16,11 @@ public class SceneRoot extends SceneNode {
         localRoot = this;
     }
 
-    public SceneRoot(SceneNode parent, Application application) {
+    public SceneRoot(SceneNode parent) {
         super(parent);
-        this.application = application;
 
+        application = parent.getRoot().getApplication();
+        root = parent.getRoot();
         localRoot = this;
     }
 
@@ -32,6 +34,10 @@ public class SceneRoot extends SceneNode {
 
     public EventBus getEventBus() {
         return application.getEventBus();
+    }
+
+    public Scene getScene() {
+        return application.getScene();
     }
 
     public double getDeltaTime() {

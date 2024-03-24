@@ -1,35 +1,62 @@
 package com.github.jovialen.motor.core;
 
+import com.github.jovialen.motor.graph.render.RenderNode;
 import com.github.jovialen.motor.graph.render.RenderRoot;
-import com.github.jovialen.motor.graph.render.RunRenderGraphTask;
+import com.github.jovialen.motor.graph.render.task.CreateRenderGraphTask;
+import com.github.jovialen.motor.graph.render.task.DestroyRenderGraphTask;
+import com.github.jovialen.motor.graph.render.task.RunRenderGraphTask;
+import com.github.jovialen.motor.graph.render.task.SyncRenderGraphTask;
+import com.github.jovialen.motor.graph.scene.SceneNode;
 import com.github.jovialen.motor.graph.scene.SceneRoot;
+import com.github.jovialen.motor.graph.scene.event.SceneNodeEvent;
+import com.github.jovialen.motor.graph.scene.renderable.MigrationNode;
+import com.github.jovialen.motor.render.RenderThread;
+import com.google.common.eventbus.Subscribe;
+import org.tinylog.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Scene {
     private final Application application;
+    private final RenderThread renderThread;
     private final SceneRoot sceneRoot;
-    private RenderRoot renderRoot;
+    private final Map<SceneNode, RenderNode> migrationMap = new HashMap<>();
+    private RenderRoot renderRoot = null;
+    private boolean rebuildRenderGraph = true;
 
     public Scene(Application application, SceneSource source) {
         this.application = application;
+        this.renderThread = application.getRenderThread();
         this.sceneRoot = source.instantiate(new SceneRoot(application));
-        this.renderRoot = new RenderRoot(application);
+
+        application.getEventBus().register(this);
     }
 
     public void start() {
         sceneRoot.start();
-        renderRoot.create();
+        shouldRebuildRenderGraph();
     }
 
     public void update(double deltaTime) {
-        application.getRenderThread().addTask(new RunRenderGraphTask(renderRoot));
+        if (rebuildRenderGraph) {
+            rebuildRenderGraph();
+        }
+
+        renderThread.addTask(new SyncRenderGraphTask(renderRoot, sceneRoot, migrationMap));
+        renderThread.addTask(new RunRenderGraphTask(renderRoot));
         sceneRoot.process(deltaTime);
 
         application.getRenderThread().waitIdle();
     }
 
     public void stop() {
-        renderRoot.destroy();
+        destroyRenderGraph();
         sceneRoot.stop();
+    }
+
+    public void shouldRebuildRenderGraph() {
+        rebuildRenderGraph = true;
     }
 
     public Application getApplication() {
@@ -42,5 +69,32 @@ public class Scene {
 
     public RenderRoot getRenderRoot() {
         return renderRoot;
+    }
+
+    @Subscribe
+    public void onSceneNodeEvent(SceneNodeEvent event) {
+        // Rebuild the render graph if the node added or removed from the
+        // render graph is a migration node
+        if (MigrationNode.class.isAssignableFrom(event.node.getClass())) {
+            shouldRebuildRenderGraph();
+        }
+    }
+
+    private void rebuildRenderGraph() {
+        Logger.tag("RENDER").debug("Rebuilding render graph");
+        rebuildRenderGraph = false;
+
+        if (renderRoot != null) {
+            destroyRenderGraph();
+        }
+
+        migrationMap.clear();
+        renderRoot = new RenderRoot(application);
+        renderThread.addTask(new CreateRenderGraphTask(renderRoot, sceneRoot, migrationMap));
+    }
+
+    private void destroyRenderGraph() {
+        renderThread.addTask(new DestroyRenderGraphTask(renderRoot));
+        renderRoot = null;
     }
 }

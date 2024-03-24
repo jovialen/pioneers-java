@@ -1,10 +1,7 @@
 package com.github.jovialen.motor.graph.scene;
 
 import com.github.jovialen.motor.graph.Node;
-import org.checkerframework.checker.nullness.qual.NonNull;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.github.jovialen.motor.graph.scene.event.SceneNodeAddedEvent;
 
 public class SceneNode extends Node<SceneNode> {
     SceneRoot root;
@@ -17,6 +14,14 @@ public class SceneNode extends Node<SceneNode> {
         if (parent == null) return;
         this.root = parent.getRoot();
         this.localRoot = parent.getLocalRoot();
+    }
+
+    @Override
+    public <U extends SceneNode> U addChild(U child) {
+        U u = super.addChild(child);
+        child.start();
+        getRoot().getEventBus().post(new SceneNodeAddedEvent(u));
+        return u;
     }
 
     public void start() {

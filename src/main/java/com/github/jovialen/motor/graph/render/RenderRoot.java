@@ -14,16 +14,6 @@ public class RenderRoot extends RenderNode {
         this.application = application;
     }
 
-    @Override
-    public void run() {
-        Vector2i resolution = getWindow().getResolution();
-        GL11.glViewport(0, 0, resolution.x, resolution.y);
-        GL11.glClearColor(1, 0, 1, 1);
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-        getWindow().present();
-        super.run();
-    }
-
     public Application getApplication() {
         return application;
     }

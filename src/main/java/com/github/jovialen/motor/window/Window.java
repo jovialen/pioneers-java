@@ -1,15 +1,11 @@
 package com.github.jovialen.motor.window;
 
-import com.github.jovialen.motor.input.event.mouse.InputMouseScrollEvent;
 import com.github.jovialen.motor.input.event.key.InputCharEvent;
 import com.github.jovialen.motor.input.event.key.InputKeyPressedEvent;
 import com.github.jovialen.motor.input.event.key.InputKeyReleasedEvent;
-import com.github.jovialen.motor.input.event.mouse.InputMouseEnterEvent;
-import com.github.jovialen.motor.input.event.mouse.InputMouseMoveEvent;
-import com.github.jovialen.motor.input.event.mouse.InputMousePressedButtonEvent;
-import com.github.jovialen.motor.input.event.mouse.InputMouseReleasedButtonEvent;
-import com.github.jovialen.motor.render.resource.Surface;
+import com.github.jovialen.motor.input.event.mouse.*;
 import com.github.jovialen.motor.render.context.GLContext;
+import com.github.jovialen.motor.render.resource.Surface;
 import com.github.jovialen.motor.utils.GLFWUtils;
 import com.github.jovialen.motor.utils.MonitorUtils;
 import com.github.jovialen.motor.window.event.WindowCloseEvent;
@@ -112,6 +108,11 @@ public class Window implements Surface {
     @Override
     public Vector2i getResolution() {
         return getSize();
+    }
+
+    @Override
+    public int getId() {
+        return 0;
     }
 
     public boolean isVisible() {

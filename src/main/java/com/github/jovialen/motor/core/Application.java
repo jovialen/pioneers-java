@@ -2,9 +2,6 @@ package com.github.jovialen.motor.core;
 
 import com.github.jovialen.motor.render.RenderThread;
 import com.github.jovialen.motor.render.Renderer;
-import com.github.jovialen.motor.render.task.ActivateContextTask;
-import com.github.jovialen.motor.render.task.DeactivateContextTask;
-import com.github.jovialen.motor.thread.ThreadWorker;
 import com.github.jovialen.motor.window.Window;
 import com.github.jovialen.motor.window.event.WindowCloseEvent;
 import com.google.common.eventbus.EventBus;

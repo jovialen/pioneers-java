@@ -1,6 +1,5 @@
 package com.github.jovialen.motor.input.event.mouse;
 
-import com.github.jovialen.motor.input.event.mouse.InputMouseEvent;
 import com.github.jovialen.motor.window.Window;
 import org.joml.Vector2d;
 

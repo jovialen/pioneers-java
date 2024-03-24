@@ -15,12 +15,12 @@ public abstract class Node<T extends Node<T>> {
         return parent;
     }
 
-    public <U extends T> U getParent(Class<U> uClass) {
+    public <U> U getParent(Class<U> uClass) {
         return getParent(uClass, false);
     }
 
     @SuppressWarnings("unchecked")
-    public <U extends T> U getParent(Class<U> uClass, boolean mustBeImmediate) {
+    public <U> U getParent(Class<U> uClass, boolean mustBeImmediate) {
         if (mustBeImmediate) {
             return nodeMatchesClass(parent, uClass) ? (U) parent : null;
         }
@@ -33,15 +33,15 @@ public abstract class Node<T extends Node<T>> {
         return (U) current;
     }
 
-    public <U extends T> List<U> getParents(Class<U> uClass) {
+    public <U> List<U> getParents(Class<U> uClass) {
         return getParents(uClass, Integer.MAX_VALUE);
     }
 
-    public <U extends T> List<U> getParents(Class<U> uClass, int maxDepth) {
+    public <U> List<U> getParents(Class<U> uClass, int maxDepth) {
         return getParents(uClass, maxDepth, false);
     }
 
-    public <U extends T> List<U> getParents(Class<U> uClass, int maxDepth, boolean breakOnOther) {
+    public <U> List<U> getParents(Class<U> uClass, int maxDepth, boolean breakOnOther) {
         List<U> parents = new ArrayList<>();
         U current = getParent(uClass, breakOnOther);
         while (current != null) {
@@ -56,16 +56,16 @@ public abstract class Node<T extends Node<T>> {
         return children;
     }
 
-    public <U extends T> List<U> getChildren(Class<U> uClass) {
+    public <U> List<U> getChildren(Class<U> uClass) {
         return getChildren(uClass, Integer.MAX_VALUE);
     }
 
-    public <U extends T> List<U> getChildren(Class<U> uClass, int maxDepth) {
+    public <U> List<U> getChildren(Class<U> uClass, int maxDepth) {
         return getChildren(uClass, maxDepth, false, false);
     }
 
 
-    public <U extends T> List<U> getChildren(Class<U> uClass,
+    public <U> List<U> getChildren(Class<U> uClass,
                                              int maxDepth,
                                              boolean breakOnOther,
                                              boolean breakOnMatch) {
@@ -74,7 +74,12 @@ public abstract class Node<T extends Node<T>> {
         return matches;
     }
 
-    <U extends T> void addChildrenOfClass(Class<U> uClass,
+    public <U extends T> U addChild(U child) {
+        children.add(child);
+        return child;
+    }
+
+    <U> void addChildrenOfClass(Class<U> uClass,
                                           List<U> matches,
                                           int maxDepth,
                                           boolean breakOnOther,
@@ -103,7 +108,7 @@ public abstract class Node<T extends Node<T>> {
         }
     }
 
-    private <U extends T> boolean nodeMatchesClass(T node, Class<U> uClass) {
+    private <U> boolean nodeMatchesClass(T node, Class<U> uClass) {
         return uClass.isAssignableFrom(node.getClass());
     }
 }
