@@ -4,7 +4,6 @@ import com.github.jovialen.motor.graph.render.RenderNode;
 import com.github.jovialen.motor.graph.render.RenderRoot;
 import com.github.jovialen.motor.graph.scene.SceneNode;
 import com.github.jovialen.motor.graph.scene.SceneRoot;
-import com.github.jovialen.motor.graph.scene.event.SceneGraphEvent;
 
 import java.util.Map;
 

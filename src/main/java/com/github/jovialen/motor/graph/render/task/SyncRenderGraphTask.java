@@ -5,7 +5,6 @@ import com.github.jovialen.motor.graph.render.RenderRoot;
 import com.github.jovialen.motor.graph.scene.SceneNode;
 import com.github.jovialen.motor.graph.scene.SceneRoot;
 import com.github.jovialen.motor.graph.scene.renderable.MigrationNode;
-import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.Map;

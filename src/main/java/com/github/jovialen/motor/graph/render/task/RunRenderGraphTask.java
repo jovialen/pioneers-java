@@ -3,7 +3,6 @@ package com.github.jovialen.motor.graph.render.task;
 import com.github.jovialen.motor.graph.render.RenderCameraNode;
 import com.github.jovialen.motor.graph.render.RenderRoot;
 import com.github.jovialen.motor.render.resource.Surface;
-import com.github.jovialen.motor.thread.ThreadTask;
 import com.github.jovialen.motor.window.Window;
 import org.joml.Vector2i;
 import org.joml.Vector4f;

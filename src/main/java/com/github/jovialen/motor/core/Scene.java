@@ -39,14 +39,22 @@ public class Scene {
     }
 
     public void update(double deltaTime) {
+        // Check if the scene graph has to be updated
         if (rebuildRenderGraph) {
             rebuildRenderGraph();
         }
 
+        // Synchronize render graph with the scene graph
         renderThread.addTask(new SyncRenderGraphTask(renderRoot, sceneRoot, migrationMap));
+        renderThread.waitIdle();
+
+        // Start the render
         renderThread.addTask(new RunRenderGraphTask(renderRoot));
+
+        // Do the scene logic at the same time
         sceneRoot.process(deltaTime);
 
+        // Wait for the render to be complete
         application.getRenderThread().waitIdle();
     }
 
