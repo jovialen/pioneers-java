@@ -10,6 +10,7 @@ import com.github.jovialen.motor.input.event.mouse.InputMousePressedButtonEvent;
 import com.github.jovialen.motor.input.event.mouse.InputMouseReleasedButtonEvent;
 import com.github.jovialen.motor.render.resource.Surface;
 import com.github.jovialen.motor.render.context.GLContext;
+import com.github.jovialen.motor.utils.GLFWUtils;
 import com.github.jovialen.motor.utils.MonitorUtils;
 import com.github.jovialen.motor.window.event.WindowCloseEvent;
 import com.github.jovialen.motor.window.event.WindowFocusEvent;
@@ -27,6 +28,7 @@ public class Window implements Surface {
 
     private String name;
     private Vector2i size;
+    private boolean visible = true;
 
     private long handle = MemoryUtil.NULL;
     private GLContext context;
@@ -48,11 +50,13 @@ public class Window implements Surface {
 
         GLFW.glfwDefaultWindowHints();
         GLContext.configureGLFW(debug);
+        GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFWUtils.bool(visible));
 
         handle = GLFW.glfwCreateWindow(size.x, size.y, name, MemoryUtil.NULL, MemoryUtil.NULL);
         context = new GLContext(this, debug);
 
         configureEvents();
+        setVisible(visible);
     }
 
     public void close() {
@@ -61,6 +65,10 @@ public class Window implements Surface {
 
         GLFW.glfwDestroyWindow(handle);
         handle = MemoryUtil.NULL;
+    }
+
+    public void present() {
+        GLFW.glfwSwapBuffers(handle);
     }
 
     public boolean isOpen() {
@@ -104,6 +112,22 @@ public class Window implements Surface {
     @Override
     public Vector2i getResolution() {
         return getSize();
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+
+        if (isOpen()) {
+            if (visible) {
+                GLFW.glfwShowWindow(handle);
+            } else {
+                GLFW.glfwHideWindow(handle);
+            }
+        }
     }
 
     public long getHandle() {

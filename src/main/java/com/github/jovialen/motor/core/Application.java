@@ -1,5 +1,10 @@
 package com.github.jovialen.motor.core;
 
+import com.github.jovialen.motor.render.RenderThread;
+import com.github.jovialen.motor.render.Renderer;
+import com.github.jovialen.motor.render.task.ActivateContextTask;
+import com.github.jovialen.motor.render.task.DeactivateContextTask;
+import com.github.jovialen.motor.thread.ThreadWorker;
 import com.github.jovialen.motor.window.Window;
 import com.github.jovialen.motor.window.event.WindowCloseEvent;
 import com.google.common.eventbus.EventBus;
@@ -16,6 +21,8 @@ public abstract class Application {
 
     private boolean running = false;
     private Scene scene;
+    private Renderer renderer;
+    private RenderThread renderThread;
 
     public Application(String name, SceneSource initialScene, boolean debug) {
         this.name = name;
@@ -69,6 +76,14 @@ public abstract class Application {
         this.scene = new Scene(this, scene);
     }
 
+    public Renderer getRenderer() {
+        return renderer;
+    }
+
+    public RenderThread getRenderThread() {
+        return renderThread;
+    }
+
     @Subscribe
     public void onWindowClose(WindowCloseEvent event) {
         if (event.window != window) return;
@@ -81,21 +96,28 @@ public abstract class Application {
 
         clock.reset();
 
+        window.setVisible(false);
         window.open();
         running = true;
 
-        window.getContext().activate();
+        renderer = new Renderer(window.getContext());
+        renderThread = new RenderThread(renderer);
+        renderThread.start();
 
         scene = new Scene(this, initialScene);
         scene.start();
+
+        window.setVisible(true);
     }
 
     private void close() {
         Logger.tag("APP").info("Closing app {}", name);
 
+        window.setVisible(false);
+
         unloadScene();
 
-        window.getContext().deactivate();
+        renderThread.stop();
         window.close();
     }
 
