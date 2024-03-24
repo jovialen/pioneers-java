@@ -7,7 +7,15 @@ public class RenderNode extends Node<RenderNode> {
         super(parent);
     }
 
+    public void create() {
+        getChildren().forEach(RenderNode::create);
+    }
+
     public void run() {
         getChildren().forEach(RenderNode::run);
+    }
+
+    public void destroy() {
+        getChildren().forEach(RenderNode::destroy);
     }
 }

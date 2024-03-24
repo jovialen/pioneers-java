@@ -1,7 +1,5 @@
 package com.github.jovialen.motor.core;
 
-import com.github.jovialen.motor.graph.render.RenderRoot;
-import com.github.jovialen.motor.graph.scene.SceneRoot;
 import com.github.jovialen.motor.window.Window;
 import com.github.jovialen.motor.window.event.WindowCloseEvent;
 import com.google.common.eventbus.EventBus;
@@ -14,13 +12,12 @@ public abstract class Application {
     private final EventBus eventBus;
     private final Window window;
     private final Clock clock;
-    private final Scene initialScene;
+    private final SceneSource initialScene;
 
     private boolean running = false;
-    private SceneRoot sceneRoot;
-    private RenderRoot renderRoot;
+    private Scene scene;
 
-    public Application(String name, Scene initialScene, boolean debug) {
+    public Application(String name, SceneSource initialScene, boolean debug) {
         this.name = name;
         this.initialScene = initialScene;
 
@@ -33,10 +30,8 @@ public abstract class Application {
 
     public void run() {
         open();
-        clock.reset();
         while (running) {
-            sceneRoot.process(clock.tick());
-            renderRoot.run();
+            scene.update(clock.tick());
             GLFW.glfwWaitEvents();
         }
         close();
@@ -58,6 +53,22 @@ public abstract class Application {
         return clock;
     }
 
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setScene(SceneSource scene) {
+        Logger.tag("APP").info("Setting scene to {}", scene);
+
+        if (!running) {
+            Logger.tag("APP").error("Cannot change scene. Application is not running");
+            return;
+        }
+
+        unloadScene();
+        this.scene = new Scene(this, scene);
+    }
+
     @Subscribe
     public void onWindowClose(WindowCloseEvent event) {
         if (event.window != window) return;
@@ -68,22 +79,30 @@ public abstract class Application {
     private void open() {
         Logger.tag("APP").info("Opening app {}", name);
 
+        clock.reset();
+
         window.open();
         running = true;
 
         window.getContext().activate();
 
-        sceneRoot = initialScene.instantiate(new SceneRoot(this));
-        sceneRoot.start();
-        renderRoot = new RenderRoot(this);
+        scene = new Scene(this, initialScene);
+        scene.start();
     }
 
     private void close() {
         Logger.tag("APP").info("Closing app {}", name);
 
-        sceneRoot.stop();
+        unloadScene();
 
         window.getContext().deactivate();
         window.close();
+    }
+
+    private void unloadScene() {
+        Logger.tag("APP").debug("Unloading scene {}", scene);
+
+        scene.stop();
+        scene = null;
     }
 }
