@@ -79,6 +79,10 @@ public abstract class Node<T extends Node<T>> {
         return child;
     }
 
+    public <U extends T> void removeChild(U child) {
+        children.remove(child);
+    }
+
     <U> void addChildrenOfClass(Class<U> uClass,
                                           List<U> matches,
                                           int maxDepth,
@@ -89,22 +93,24 @@ public abstract class Node<T extends Node<T>> {
         }
 
         for (T child : children) {
-            if (!nodeMatchesClass(child, uClass) && breakOnOther) {
+            if (nodeMatchesClass(child, uClass)) {
+                //noinspection unchecked
+                matches.add((U) child);
+
+                if (breakOnMatch) {
+                    continue;
+                }
+            } else if (breakOnOther) {
                 continue;
             }
 
-            //noinspection unchecked
-            matches.add((U) child);
-
-            if (breakOnMatch || maxDepth <= 0) {
-                continue;
+            if (maxDepth > 1) {
+                child.addChildrenOfClass(uClass,
+                        matches,
+                        maxDepth - 1,
+                        breakOnOther,
+                        false);
             }
-
-            child.addChildrenOfClass(uClass,
-                    matches,
-                    maxDepth - 1,
-                    breakOnOther,
-                    false);
         }
     }
 

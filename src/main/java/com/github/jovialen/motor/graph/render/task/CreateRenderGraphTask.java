@@ -5,6 +5,7 @@ import com.github.jovialen.motor.graph.render.RenderRoot;
 import com.github.jovialen.motor.graph.scene.SceneNode;
 import com.github.jovialen.motor.graph.scene.SceneRoot;
 import com.github.jovialen.motor.graph.scene.renderable.MigrationNode;
+import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,10 @@ public class CreateRenderGraphTask extends MigrationTask {
 
     @Override
     public void invoke() {
+        Logger.tag("RENDER").debug("Migrating scene graph to render graph");
         migrateNodeChildren(renderRoot, sceneRoot);
+
+        Logger.tag("RENDER").debug("Creating render graph");
         renderRoot.create();
     }
 

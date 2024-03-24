@@ -14,7 +14,9 @@ import com.github.jovialen.motor.render.RenderThread;
 import com.google.common.eventbus.Subscribe;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Scene {
@@ -22,6 +24,7 @@ public class Scene {
     private final RenderThread renderThread;
     private final SceneRoot sceneRoot;
     private final Map<SceneNode, RenderNode> migrationMap = new HashMap<>();
+    private final List<SceneNode> toRemove = new ArrayList<>();
     private RenderRoot renderRoot = null;
     private boolean rebuildRenderGraph = true;
 
@@ -56,6 +59,13 @@ public class Scene {
 
         // Wait for the render to be complete
         application.getRenderThread().waitIdle();
+
+        // Remove unwanted nodes
+        while (!toRemove.isEmpty()) {
+            SceneNode node = toRemove.removeFirst();
+            Logger.tag("SCENE").debug("Removing node {}", node);
+            node.getParent().removeChild(node);
+        }
     }
 
     public void stop() {
@@ -67,8 +77,20 @@ public class Scene {
         rebuildRenderGraph = true;
     }
 
+    public void removeNode(SceneNode node) {
+        toRemove.add(node);
+    }
+
     public Application getApplication() {
         return application;
+    }
+
+    public RenderThread getRenderThread() {
+        return renderThread;
+    }
+
+    public List<SceneNode> getToRemove() {
+        return toRemove;
     }
 
     public SceneRoot getSceneRoot() {

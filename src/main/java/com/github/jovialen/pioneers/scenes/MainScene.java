@@ -6,11 +6,14 @@ import com.github.jovialen.motor.graph.scene.renderable.CameraNode;
 
 public class MainScene implements SceneSource {
     public SceneRoot instantiate(SceneRoot root) {
-        root.setName("Main Scene");
+        root.name = "Main Scene";
 
         CameraNode cameraNode = root.addChild(new CameraNode(root));
-        cameraNode.setName("Camera");
+        cameraNode.name = "Camera";
+        cameraNode.clearColor.x = 0;
         cameraNode.clearColor.y = 0;
+
+        root.addChild(new RemovableCameraScene());
 
         return root;
     }
