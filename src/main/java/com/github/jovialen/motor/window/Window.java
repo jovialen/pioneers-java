@@ -1,5 +1,6 @@
 package com.github.jovialen.motor.window;
 
+import com.github.jovialen.motor.input.event.mouse.InputMouseScrollEvent;
 import com.github.jovialen.motor.input.event.key.InputCharEvent;
 import com.github.jovialen.motor.input.event.key.InputKeyPressedEvent;
 import com.github.jovialen.motor.input.event.key.InputKeyReleasedEvent;
@@ -9,7 +10,6 @@ import com.github.jovialen.motor.input.event.mouse.InputMousePressedButtonEvent;
 import com.github.jovialen.motor.input.event.mouse.InputMouseReleasedButtonEvent;
 import com.github.jovialen.motor.render.Surface;
 import com.github.jovialen.motor.render.context.GLContext;
-import com.github.jovialen.motor.utils.GLFWUtils;
 import com.github.jovialen.motor.utils.MonitorUtils;
 import com.github.jovialen.motor.window.event.WindowCloseEvent;
 import com.github.jovialen.motor.window.event.WindowFocusEvent;
@@ -47,11 +47,7 @@ public class Window implements Surface {
         }
 
         GLFW.glfwDefaultWindowHints();
-        GLFW.glfwWindowHint(GLFW.GLFW_CLIENT_API, GLFW.GLFW_OPENGL_API);
-        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, GLContext.VERSION_MAJOR);
-        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, GLContext.VERSION_MINOR);
-        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_DEBUG, GLFWUtils.bool(debug));
-        GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_DEBUG_CONTEXT, GLFWUtils.bool(debug));
+        GLContext.configureGLFW(debug);
 
         handle = GLFW.glfwCreateWindow(size.x, size.y, name, MemoryUtil.NULL, MemoryUtil.NULL);
         context = new GLContext(this, debug);
@@ -148,6 +144,9 @@ public class Window implements Surface {
         });
         GLFW.glfwSetCursorEnterCallback(handle, (window, entered) -> {
             eventBus.post(new InputMouseEnterEvent(this, entered));
+        });
+        GLFW.glfwSetScrollCallback(handle, (window, dx, dy) -> {
+            eventBus.post(new InputMouseScrollEvent(this, new Vector2d(dx, dy)));
         });
     }
 }

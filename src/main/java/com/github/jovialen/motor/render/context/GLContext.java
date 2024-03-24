@@ -1,9 +1,11 @@
 package com.github.jovialen.motor.render.context;
 
+import com.github.jovialen.motor.utils.GLFWUtils;
 import com.github.jovialen.motor.window.Window;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
+import org.lwjgl.system.Platform;
 import org.tinylog.Logger;
 import org.tinylog.TaggedLogger;
 
@@ -89,14 +91,14 @@ public class GLContext {
     private void setupDebugMessageCallback() {
         Logger.tag("GL").debug("Configuring OpenGL debug message callback");
 
-        int flags = GL43.glGetInteger(GL43.GL_CONTEXT_FLAGS);
+        int flags = GL11.glGetInteger(GL30.GL_CONTEXT_FLAGS);
         if ((flags & GL43.GL_CONTEXT_FLAG_DEBUG_BIT) == 0) {
             Logger.tag("GL").error("Failed to create debug message callback; Not a debug context");
             return;
         }
 
-        GL43.glEnable(GL43.GL_DEBUG_OUTPUT);
-        GL43.glEnable(GL43.GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        GL11.glEnable(GL43.GL_DEBUG_OUTPUT);
+        GL11.glEnable(GL43.GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
         GL43.glDebugMessageCallback(new TinyLogGLDebugMessageCallback(), MemoryUtil.NULL);
         GL43.glDebugMessageControl(GLDebugSource.all(),
@@ -104,5 +106,22 @@ public class GLContext {
                 GLDebugSeverity.all(),
                 (IntBuffer) null,
                 true);
+    }
+
+    public static void configureGLFW(boolean debug) {
+        // Profile
+        int forwardCompatibility = GLFWUtils.bool(Platform.get() == Platform.MACOSX);
+        GLFW.glfwWindowHint(GLFW.GLFW_CLIENT_API, GLFW.GLFW_OPENGL_API);
+        GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
+        GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, forwardCompatibility);
+
+        // Version
+        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, VERSION_MAJOR);
+        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, VERSION_MINOR);
+
+        // Debug
+        int glfwDebug = GLFWUtils.bool(debug);
+        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_DEBUG, glfwDebug);
+        GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_DEBUG_CONTEXT, glfwDebug);
     }
 }
