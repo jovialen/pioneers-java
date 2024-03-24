@@ -8,7 +8,7 @@ public class Pioneers extends Application {
     public static final String NAME = "Pioneers";
 
     public Pioneers() {
-        super(NAME, new MainScene());
+        super(NAME, new MainScene(), true);
     }
 
     public static void main(String[] args) {

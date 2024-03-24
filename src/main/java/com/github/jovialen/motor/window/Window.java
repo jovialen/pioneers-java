@@ -8,6 +8,8 @@ import com.github.jovialen.motor.input.event.mouse.InputMouseMoveEvent;
 import com.github.jovialen.motor.input.event.mouse.InputMousePressedButtonEvent;
 import com.github.jovialen.motor.input.event.mouse.InputMouseReleasedButtonEvent;
 import com.github.jovialen.motor.render.Surface;
+import com.github.jovialen.motor.render.context.GLContext;
+import com.github.jovialen.motor.utils.GLFWUtils;
 import com.github.jovialen.motor.utils.MonitorUtils;
 import com.github.jovialen.motor.window.event.WindowCloseEvent;
 import com.github.jovialen.motor.window.event.WindowFocusEvent;
@@ -21,15 +23,18 @@ import org.tinylog.Logger;
 
 public class Window implements Surface {
     private final EventBus eventBus;
+    private final boolean debug;
 
     private String name;
     private Vector2i size;
 
     private long handle = MemoryUtil.NULL;
+    private GLContext context;
 
-    public Window(EventBus eventBus, String name) {
+    public Window(EventBus eventBus, String name, boolean debug) {
         this.eventBus = eventBus;
         this.name = name;
+        this.debug = debug;
     }
 
     public void open() {
@@ -41,7 +46,15 @@ public class Window implements Surface {
             Logger.tag("WINDOW").warn("No window size set. Selecting size {} automatically", size);
         }
 
+        GLFW.glfwDefaultWindowHints();
+        GLFW.glfwWindowHint(GLFW.GLFW_CLIENT_API, GLFW.GLFW_OPENGL_API);
+        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, GLContext.VERSION_MAJOR);
+        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, GLContext.VERSION_MINOR);
+        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_DEBUG, GLFWUtils.bool(debug));
+        GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_DEBUG_CONTEXT, GLFWUtils.bool(debug));
+
         handle = GLFW.glfwCreateWindow(size.x, size.y, name, MemoryUtil.NULL, MemoryUtil.NULL);
+        context = new GLContext(this, debug);
 
         configureEvents();
     }
@@ -60,6 +73,10 @@ public class Window implements Surface {
 
     public EventBus getEventBus() {
         return eventBus;
+    }
+
+    public GLContext getContext() {
+        return context;
     }
 
     public String getName() {
@@ -99,7 +116,8 @@ public class Window implements Surface {
 
     private void configureEvents() {
         GLFW.glfwSetWindowSizeCallback(handle, (window, width, height) -> {
-            eventBus.post(new WindowSizeEvent(this, new Vector2i(width, height)));
+            size = new Vector2i(width, height);
+            eventBus.post(new WindowSizeEvent(this, size));
         });
         GLFW.glfwSetWindowCloseCallback(handle, (window) -> {
             eventBus.post(new WindowCloseEvent(this));

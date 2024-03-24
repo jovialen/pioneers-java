@@ -6,7 +6,6 @@ import com.github.jovialen.motor.window.Window;
 import com.github.jovialen.motor.window.event.WindowCloseEvent;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import org.checkerframework.checker.units.qual.C;
 import org.lwjgl.glfw.GLFW;
 import org.tinylog.Logger;
 
@@ -20,12 +19,12 @@ public abstract class Application {
     private boolean running = false;
     private SceneRoot sceneRoot;
 
-    public Application(String name, Scene initialScene) {
+    public Application(String name, Scene initialScene, boolean debug) {
         this.name = name;
         this.initialScene = initialScene;
 
         eventBus = new EventBus();
-        window = new Window(eventBus, name);
+        window = new Window(eventBus, name, debug);
         clock = new Clock();
 
         eventBus.register(this);
@@ -70,6 +69,8 @@ public abstract class Application {
         window.open();
         running = true;
 
+        window.getContext().activate();
+
         sceneRoot = initialScene.instantiate(new SceneRoot(this));
         sceneRoot.start();
     }
@@ -79,6 +80,7 @@ public abstract class Application {
 
         sceneRoot.stop();
 
+        window.getContext().deactivate();
         window.close();
     }
 }
