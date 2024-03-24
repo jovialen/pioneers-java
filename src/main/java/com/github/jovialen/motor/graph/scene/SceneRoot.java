@@ -1,4 +1,4 @@
-package com.github.jovialen.motor.scene;
+package com.github.jovialen.motor.graph.scene;
 
 import com.github.jovialen.motor.core.Application;
 import com.github.jovialen.motor.window.Window;
@@ -8,6 +8,7 @@ public class SceneRoot extends SceneNode {
     public final Application application;
 
     public SceneRoot(Application application) {
+        super(null);
         this.application = application;
 
         root = this;

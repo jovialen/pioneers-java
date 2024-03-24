@@ -8,7 +8,7 @@ import com.github.jovialen.motor.input.event.mouse.InputMouseEnterEvent;
 import com.github.jovialen.motor.input.event.mouse.InputMouseMoveEvent;
 import com.github.jovialen.motor.input.event.mouse.InputMousePressedButtonEvent;
 import com.github.jovialen.motor.input.event.mouse.InputMouseReleasedButtonEvent;
-import com.github.jovialen.motor.render.Surface;
+import com.github.jovialen.motor.render.resource.Surface;
 import com.github.jovialen.motor.render.context.GLContext;
 import com.github.jovialen.motor.utils.MonitorUtils;
 import com.github.jovialen.motor.window.event.WindowCloseEvent;

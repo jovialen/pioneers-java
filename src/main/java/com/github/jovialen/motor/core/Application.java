@@ -1,7 +1,7 @@
 package com.github.jovialen.motor.core;
 
-import com.github.jovialen.motor.scene.Scene;
-import com.github.jovialen.motor.scene.SceneRoot;
+import com.github.jovialen.motor.graph.render.RenderRoot;
+import com.github.jovialen.motor.graph.scene.SceneRoot;
 import com.github.jovialen.motor.window.Window;
 import com.github.jovialen.motor.window.event.WindowCloseEvent;
 import com.google.common.eventbus.EventBus;
@@ -18,6 +18,7 @@ public abstract class Application {
 
     private boolean running = false;
     private SceneRoot sceneRoot;
+    private RenderRoot renderRoot;
 
     public Application(String name, Scene initialScene, boolean debug) {
         this.name = name;
@@ -35,6 +36,7 @@ public abstract class Application {
         clock.reset();
         while (running) {
             sceneRoot.process(clock.tick());
+            renderRoot.run();
             GLFW.glfwWaitEvents();
         }
         close();
@@ -73,6 +75,7 @@ public abstract class Application {
 
         sceneRoot = initialScene.instantiate(new SceneRoot(this));
         sceneRoot.start();
+        renderRoot = new RenderRoot(this);
     }
 
     private void close() {
