@@ -11,6 +11,7 @@ import org.joml.Vector4f;
 public class CameraNode extends Node3D implements MigrationNode<RenderCameraNode> {
     public Surface target;
     public Vector4f clearColor = new Vector4f(1);
+    public int priority = 0;
 
     public CameraNode(SceneNode parent) {
         super(parent);
@@ -31,5 +32,6 @@ public class CameraNode extends Node3D implements MigrationNode<RenderCameraNode
 
         renderNode.target = target;
         renderNode.clearColor.set(clearColor);
+        renderNode.priority = priority;
     }
 }

@@ -13,8 +13,6 @@ public class MainScene implements SceneSource {
         cameraNode.clearColor.x = 0;
         cameraNode.clearColor.y = 0;
 
-        root.addChild(new RemovableCameraScene());
-
         return root;
     }
 }

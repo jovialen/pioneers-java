@@ -9,8 +9,10 @@ import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.PriorityQueue;
 
 public class RunRenderGraphTask extends RenderGraphTask {
     public RunRenderGraphTask(RenderRoot renderRoot) {
@@ -19,7 +21,7 @@ public class RunRenderGraphTask extends RenderGraphTask {
 
     @Override
     public void invoke() {
-        List<RenderCameraNode> cameras = renderRoot.getChildren(RenderCameraNode.class);
+        PriorityQueue<RenderCameraNode> cameras = getCameras();
         Window window = renderRoot.getWindow();
 
         for (RenderCameraNode camera : cameras) {
@@ -36,5 +38,12 @@ public class RunRenderGraphTask extends RenderGraphTask {
         }
 
         window.present();
+    }
+
+    private PriorityQueue<RenderCameraNode> getCameras() {
+        List<RenderCameraNode> cameraNodes = renderRoot.getChildren(RenderCameraNode.class);
+        PriorityQueue<RenderCameraNode> cameras = new PriorityQueue<>(Comparator.comparingInt((a) -> a.priority));
+        cameras.addAll(cameraNodes);
+        return cameras;
     }
 }

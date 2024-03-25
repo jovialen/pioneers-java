@@ -10,6 +10,7 @@ public class RenderCameraNode extends RenderNode {
 
     public Surface target = null;
     public Vector4f clearColor = new Vector4f();
+    public int priority = 0;
 
     public RenderCameraNode(RenderNode parent) {
         super(parent);
