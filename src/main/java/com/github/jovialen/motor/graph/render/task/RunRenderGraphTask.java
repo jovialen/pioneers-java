@@ -2,6 +2,7 @@ package com.github.jovialen.motor.graph.render.task;
 
 import com.github.jovialen.motor.graph.render.RenderCameraNode;
 import com.github.jovialen.motor.graph.render.RenderRoot;
+import com.github.jovialen.motor.render.Camera;
 import com.github.jovialen.motor.render.resource.Surface;
 import com.github.jovialen.motor.window.Window;
 import org.joml.Vector2i;
@@ -24,7 +25,9 @@ public class RunRenderGraphTask extends RenderGraphTask {
         PriorityQueue<RenderCameraNode> cameras = getCameras();
         Window window = renderRoot.getWindow();
 
-        for (RenderCameraNode camera : cameras) {
+        for (RenderCameraNode cameraNode : cameras) {
+            Camera camera = cameraNode.camera;
+
             Surface target = Objects.requireNonNullElse(camera.target, window);
             Vector2i resolution = target.getResolution();
             Vector4f clearColor = camera.clearColor;
@@ -42,7 +45,7 @@ public class RunRenderGraphTask extends RenderGraphTask {
 
     private PriorityQueue<RenderCameraNode> getCameras() {
         List<RenderCameraNode> cameraNodes = renderRoot.getChildren(RenderCameraNode.class);
-        PriorityQueue<RenderCameraNode> cameras = new PriorityQueue<>(Comparator.comparingInt((a) -> a.priority));
+        PriorityQueue<RenderCameraNode> cameras = new PriorityQueue<>(Comparator.comparingInt((a) -> a.camera.priority));
         cameras.addAll(cameraNodes);
         return cameras;
     }

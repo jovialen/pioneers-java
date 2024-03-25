@@ -10,8 +10,8 @@ public class MainScene implements SceneSource {
 
         CameraNode cameraNode = root.addChild(new CameraNode(root));
         cameraNode.name = "Camera";
-        cameraNode.clearColor.x = 0;
-        cameraNode.clearColor.y = 0;
+        cameraNode.camera.clearColor.x = 0;
+        cameraNode.camera.clearColor.y = 0;
 
         return root;
     }
