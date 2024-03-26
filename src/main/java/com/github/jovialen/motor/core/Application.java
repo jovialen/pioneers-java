@@ -2,6 +2,7 @@ package com.github.jovialen.motor.core;
 
 import com.github.jovialen.motor.render.RenderThread;
 import com.github.jovialen.motor.render.Renderer;
+import com.github.jovialen.motor.render.task.DestroyRendererTask;
 import com.github.jovialen.motor.window.Window;
 import com.github.jovialen.motor.window.event.WindowCloseEvent;
 import com.google.common.eventbus.EventBus;
@@ -114,6 +115,7 @@ public abstract class Application {
 
         unloadScene();
 
+        renderThread.addTask(new DestroyRendererTask(renderer));
         renderThread.stop();
         window.close();
     }
