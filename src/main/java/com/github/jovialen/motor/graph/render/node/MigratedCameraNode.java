@@ -1,15 +1,16 @@
-package com.github.jovialen.motor.graph.render;
+package com.github.jovialen.motor.graph.render.node;
 
+import com.github.jovialen.motor.graph.render.RenderNode;
 import com.github.jovialen.motor.render.Camera;
 import org.joml.Matrix4f;
 
-public class RenderCameraNode extends RenderNode {
+public class MigratedCameraNode extends RenderNode {
     public Matrix4f transform = new Matrix4f().identity();
     public Matrix4f projection = new Matrix4f().identity();
 
     public Camera camera = new Camera();
 
-    public RenderCameraNode(RenderNode parent) {
+    public MigratedCameraNode(RenderNode parent) {
         super(parent);
     }
 }

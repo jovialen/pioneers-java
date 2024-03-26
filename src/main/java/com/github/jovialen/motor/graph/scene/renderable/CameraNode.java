@@ -1,6 +1,6 @@
 package com.github.jovialen.motor.graph.scene.renderable;
 
-import com.github.jovialen.motor.graph.render.RenderCameraNode;
+import com.github.jovialen.motor.graph.render.node.MigratedCameraNode;
 import com.github.jovialen.motor.graph.render.RenderNode;
 import com.github.jovialen.motor.graph.scene.SceneNode;
 import com.github.jovialen.motor.graph.scene.transform.Node3D;
@@ -9,7 +9,7 @@ import com.github.jovialen.motor.render.resource.Surface;
 
 import java.util.Objects;
 
-public class CameraNode extends Node3D implements MigrationNode<RenderCameraNode> {
+public class CameraNode extends Node3D implements MigrationNode<MigratedCameraNode> {
     public Camera camera = new Camera();
 
     public CameraNode(SceneNode parent) {
@@ -17,12 +17,12 @@ public class CameraNode extends Node3D implements MigrationNode<RenderCameraNode
     }
 
     @Override
-    public RenderCameraNode migrate(RenderNode parent) {
-        return new RenderCameraNode(parent);
+    public MigratedCameraNode migrate(RenderNode parent) {
+        return new MigratedCameraNode(parent);
     }
 
     @Override
-    public void synchronize(RenderCameraNode renderNode) {
+    public void synchronize(MigratedCameraNode renderNode) {
         renderNode.camera.set(camera);
         renderNode.transform.set(transform);
 

@@ -1,6 +1,6 @@
 package com.github.jovialen.motor.graph.render.task;
 
-import com.github.jovialen.motor.graph.render.RenderCameraNode;
+import com.github.jovialen.motor.graph.render.node.MigratedCameraNode;
 import com.github.jovialen.motor.graph.render.RenderRoot;
 import com.github.jovialen.motor.render.Camera;
 import com.github.jovialen.motor.render.resource.Surface;
@@ -22,10 +22,10 @@ public class RunRenderGraphTask extends RenderGraphTask {
 
     @Override
     public void invoke() {
-        PriorityQueue<RenderCameraNode> cameras = getCameras();
+        PriorityQueue<MigratedCameraNode> cameras = getCameras();
         Window window = renderRoot.getWindow();
 
-        for (RenderCameraNode cameraNode : cameras) {
+        for (MigratedCameraNode cameraNode : cameras) {
             Camera camera = cameraNode.camera;
 
             Surface target = Objects.requireNonNullElse(camera.target, window);
@@ -43,9 +43,9 @@ public class RunRenderGraphTask extends RenderGraphTask {
         window.present();
     }
 
-    private PriorityQueue<RenderCameraNode> getCameras() {
-        List<RenderCameraNode> cameraNodes = renderRoot.getChildren(RenderCameraNode.class);
-        PriorityQueue<RenderCameraNode> cameras = new PriorityQueue<>(Comparator.comparingInt((a) -> a.camera.priority));
+    private PriorityQueue<MigratedCameraNode> getCameras() {
+        List<MigratedCameraNode> cameraNodes = renderRoot.getChildren(MigratedCameraNode.class);
+        PriorityQueue<MigratedCameraNode> cameras = new PriorityQueue<>(Comparator.comparingInt((a) -> a.camera.priority));
         cameras.addAll(cameraNodes);
         return cameras;
     }
