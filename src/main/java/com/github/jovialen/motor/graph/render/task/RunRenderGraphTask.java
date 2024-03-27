@@ -3,6 +3,7 @@ package com.github.jovialen.motor.graph.render.task;
 import com.github.jovialen.motor.graph.render.node.MigratedCameraNode;
 import com.github.jovialen.motor.graph.render.RenderRoot;
 import com.github.jovialen.motor.render.Camera;
+import com.github.jovialen.motor.render.context.GLState;
 import com.github.jovialen.motor.render.resource.Surface;
 import com.github.jovialen.motor.window.Window;
 import org.joml.Vector2i;
@@ -25,6 +26,7 @@ public class RunRenderGraphTask extends RenderGraphTask {
         PriorityQueue<MigratedCameraNode> cameras = getCameras();
         Window window = renderRoot.getWindow();
 
+        GLState state = GLState.getCurrent();
         for (MigratedCameraNode cameraNode : cameras) {
             Camera camera = cameraNode.camera;
 
@@ -32,7 +34,7 @@ public class RunRenderGraphTask extends RenderGraphTask {
             Vector2i resolution = target.getResolution();
             Vector4f clearColor = camera.clearColor;
 
-            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, target.getId());
+            state.bindFrameBuffer(target.getId());
             GL11.glViewport(0, 0, resolution.x, resolution.y);
             GL11.glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
