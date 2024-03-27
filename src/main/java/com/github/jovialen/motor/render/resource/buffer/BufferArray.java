@@ -5,6 +5,7 @@ import com.github.jovialen.motor.render.resource.DestructibleResource;
 import com.github.jovialen.motor.render.resource.layout.BufferBinding;
 import com.github.jovialen.motor.render.resource.layout.VertexAttribute;
 import com.github.jovialen.motor.render.resource.layout.VertexLayout;
+import com.github.jovialen.motor.render.resource.shader.ShaderProgram;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.tinylog.Logger;
@@ -18,6 +19,7 @@ public class BufferArray implements DestructibleResource {
     private final VertexLayout vertexLayout;
     private final Map<Integer, VertexBuffer> vertexBuffers = new HashMap<>();
     private IndexBuffer indexBuffer;
+    private ShaderProgram specialised;
 
     public BufferArray(VertexLayout vertexLayout) {
         this(GL30.glGenVertexArrays(), vertexLayout);
@@ -45,29 +47,43 @@ public class BufferArray implements DestructibleResource {
 
     public void setVertexBuffer(int index, VertexBuffer vertexBuffer) {
         vertexBuffers.put(index, vertexBuffer);
+    }
 
-        BufferBinding bufferBinding = vertexLayout.getBuffers().get(index);
-        List<VertexAttribute> attributes = vertexLayout.getAttributes().stream()
-                .filter((attr) -> attr.bufferIndex() == index)
-                .toList();
+    public void specialiseToShader(ShaderProgram shaderProgram) {
+        if (specialised == shaderProgram) return;
+        specialised = shaderProgram;
 
         try (GLState glState = GLState.pushSharedState()) {
             glState.bindBufferArray(id);
-            glState.bindVertexBuffer(vertexBuffer.getId());
+            for (int i = 0; i < vertexLayout.getBuffers().size(); i++) {
+                BufferBinding binding = vertexLayout.getBuffers().get(i);
+                if (!vertexBuffers.containsKey(i)) {
+                    Logger.tag("GL").warn("Missing vertex buffer {} in buffer array {}", i, id);
+                    continue;
+                }
+                glState.bindVertexBuffer(vertexBuffers.get(i).getId());
 
-            Logger.tag("GL").warn("Binding vertex attributes directly in buffer array. " +
-                    "Should instead use attribute names with shader program.");
+                int finalI = i;
+                List<VertexAttribute> attributes = vertexLayout.getAttributes().stream()
+                        .filter((attr) -> attr.bufferIndex() == finalI)
+                        .toList();
 
-            int i = 0;
-            for (VertexAttribute attribute : attributes) {
-                GL20.glVertexAttribPointer(i,
-                        attribute.dataType().componentCount(),
-                        attribute.dataType().glDataType(),
-                        false,
-                        bufferBinding.stride,
-                        bufferBinding.offset + attribute.offset());
-                GL20.glEnableVertexAttribArray(i);
-                i++;
+                for (VertexAttribute attribute : attributes) {
+                    int location = shaderProgram.getAttributeLocation(attribute.name());
+
+                    if (location == -1) {
+                        Logger.tag("GL").warn("Shader is missing layout attribute {}", attribute.name());
+                        continue;
+                    }
+
+                    GL20.glEnableVertexAttribArray(location);
+                    GL20.glVertexAttribPointer(location,
+                            attribute.dataType().componentCount(),
+                            attribute.dataType().glDataType(),
+                            false,
+                            binding.stride,
+                            binding.offset + attribute.offset());
+                }
             }
         }
     }

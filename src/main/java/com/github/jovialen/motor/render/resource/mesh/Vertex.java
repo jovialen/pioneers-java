@@ -13,9 +13,9 @@ import java.nio.FloatBuffer;
 public class Vertex {
     public static final VertexLayout LAYOUT = new VertexLayoutBuilder()
             .addBuffer().perVertex().setOffset(0)
-            .addAttribute("position", DataType.FLOAT3)
-            .addAttribute("textureCoordinate", DataType.FLOAT2)
-            .addAttribute("color", DataType.FLOAT4)
+            .addAttribute("iPosition", DataType.FLOAT3)
+            .addAttribute("iTextureCoordinate", DataType.FLOAT2)
+            .addAttribute("iColor", DataType.FLOAT4)
             .build();
 
     public Vector3f position = new Vector3f(0);

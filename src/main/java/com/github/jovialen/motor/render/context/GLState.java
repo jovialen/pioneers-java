@@ -1,6 +1,7 @@
 package com.github.jovialen.motor.render.context;
 
 import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.tinylog.Logger;
 
@@ -15,6 +16,7 @@ public class GLState implements AutoCloseable {
     private int instances = 1;
     private int drawFrameBuffer = 0;
     private int readFrameBuffer = 0;
+    private int program = 0;
     private int bufferArray = 0;
     private final Map<Integer, Integer> buffers = new HashMap<>();
 
@@ -27,6 +29,7 @@ public class GLState implements AutoCloseable {
         if (parent == null) return;
         drawFrameBuffer = parent.drawFrameBuffer;
         readFrameBuffer = parent.readFrameBuffer;
+        program = parent.program;
         bufferArray = parent.bufferArray;
         buffers.putAll(parent.buffers);
     }
@@ -51,6 +54,12 @@ public class GLState implements AutoCloseable {
         if (drawFrameBuffer == frameBuffer) return;
         this.drawFrameBuffer = frameBuffer;
         GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, frameBuffer);
+    }
+
+    public void bindShaderProgram(int program) {
+        if (this.program == program) return;
+        this.program = program;
+        GL20.glUseProgram(program);
     }
 
     public void bindBufferArray(int bufferArray) {
@@ -108,6 +117,7 @@ public class GLState implements AutoCloseable {
         current = state.parent;
         state.bindReadFrameBuffer(current.readFrameBuffer);
         state.bindDrawFrameBuffer(current.drawFrameBuffer);
+        state.bindShaderProgram(current.program);
         state.bindBufferArray(current.bufferArray);
         state.buffers.forEach((target, id) -> state.bindBuffer(target, current.buffers.getOrDefault(target, 0)));
     }
