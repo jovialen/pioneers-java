@@ -8,17 +8,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GLState implements AutoCloseable {
-    private static GLState current = new GLState();
+    private static GLState current = pushState();
     private final GLState parent;
 
+    private final boolean unique;
+    private int instances = 1;
     private int drawFrameBuffer = 0;
     private int readFrameBuffer = 0;
     private int bufferArray = 0;
     private final Map<Integer, Integer> buffers = new HashMap<>();
 
-    public GLState() {
+    private GLState(boolean unique) {
         parent = current;
         current = this;
+        this.unique = unique;
+
+        // Copy current state from parent
+        if (parent == null) return;
+        drawFrameBuffer = parent.drawFrameBuffer;
+        readFrameBuffer = parent.readFrameBuffer;
+        bufferArray = parent.bufferArray;
+        buffers.putAll(parent.buffers);
     }
 
     public void bindFrameBuffer(int frameBuffer) {
@@ -58,25 +68,47 @@ public class GLState implements AutoCloseable {
     }
 
     public void bindBuffer(int target, int id) {
-        if (this.buffers.get(target) == id) return;
+        if (this.buffers.containsKey(target) && this.buffers.get(target) == id) return;
         this.buffers.put(target, id);
         GL15.glBindBuffer(target, id);
     }
 
     @Override
     public void close() {
-        if (current.parent != parent) {
-            Logger.tag("GL").error("Closing GL States out of order");
+        if (unique) {
+            popState(this);
         }
-
-        current = parent;
-        bindReadFrameBuffer(current.readFrameBuffer);
-        bindDrawFrameBuffer(current.drawFrameBuffer);
-        bindBufferArray(current.bufferArray);
-        this.buffers.forEach((target, id) -> bindBuffer(target, current.buffers.getOrDefault(target, 0)));
+        instances--;
+        if (instances <= 0) {
+            popState(this);
+        }
     }
 
     public static GLState getCurrent() {
         return current;
+    }
+
+    public static GLState pushState() {
+        return new GLState(true);
+    }
+
+    public static GLState pushSharedState() {
+        if (current.unique) {
+            return new GLState(false);
+        }
+        current.instances++;
+        return current;
+    }
+
+    public static void popState(GLState state) {
+        if (state != current) {
+            Logger.tag("GL").error("Closing GL States out of order");
+        }
+
+        current = state.parent;
+        state.bindReadFrameBuffer(current.readFrameBuffer);
+        state.bindDrawFrameBuffer(current.drawFrameBuffer);
+        state.bindBufferArray(current.bufferArray);
+        state.buffers.forEach((target, id) -> state.bindBuffer(target, current.buffers.getOrDefault(target, 0)));
     }
 }

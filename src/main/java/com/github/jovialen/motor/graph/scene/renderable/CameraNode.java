@@ -1,7 +1,7 @@
 package com.github.jovialen.motor.graph.scene.renderable;
 
-import com.github.jovialen.motor.graph.render.node.MigratedCameraNode;
 import com.github.jovialen.motor.graph.render.RenderNode;
+import com.github.jovialen.motor.graph.render.node.MigratedCameraNode;
 import com.github.jovialen.motor.graph.scene.SceneNode;
 import com.github.jovialen.motor.graph.scene.transform.Node3D;
 import com.github.jovialen.motor.render.Camera;

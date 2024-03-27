@@ -4,11 +4,14 @@ import com.github.jovialen.motor.graph.Node;
 import org.tinylog.Logger;
 
 public class RenderNode extends Node<RenderNode> {
+    RenderRoot root;
     private boolean created = false;
 
     @SuppressWarnings("CopyConstructorMissesField")
     public RenderNode(RenderNode parent) {
         super(parent);
+        if (parent == null) return;
+        root = parent.root;
     }
 
     public void create() {
@@ -38,5 +41,9 @@ public class RenderNode extends Node<RenderNode> {
     @Override
     public <U extends RenderNode> void removeChild(U child) {
         Logger.tag("RENDER").error("Attempted to remove node from render graph. Recreate render graph instead");
+    }
+
+    public RenderRoot getRoot() {
+        return root;
     }
 }

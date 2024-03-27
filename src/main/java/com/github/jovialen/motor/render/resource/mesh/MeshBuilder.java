@@ -7,7 +7,7 @@ import org.joml.Vector4f;
 
 public class MeshBuilder implements MeshSource {
     private final MeshData meshData = new MeshData();
-    private Vertex vertex;
+    private Vertex vertex = new Vertex();
 
     public MeshBuilder addVertex() {
         addVertex(vertex);

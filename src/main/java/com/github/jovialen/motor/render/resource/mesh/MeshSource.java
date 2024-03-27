@@ -8,9 +8,9 @@ public interface MeshSource {
 
     private static MeshSource triangle() {
         return new MeshBuilder()
-                .setPosition(0, 0).addVertex()
+                .setPosition(0, 0.5f).addVertex()
+                .setPosition(-0.5f, -0.5f).addVertex()
                 .setPosition(0.5f, -0.5f).addVertex()
-                .setPosition(0.5f, 0.5f).addVertex()
                 .addFace(0, 1, 2);
     }
 
