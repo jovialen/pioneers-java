@@ -37,7 +37,7 @@ public abstract class Application {
         open();
         while (running) {
             scene.update(clock.tick());
-            GLFW.glfwWaitEvents();
+            GLFW.glfwPollEvents();
         }
         close();
     }

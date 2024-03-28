@@ -8,10 +8,8 @@ import com.github.jovialen.motor.render.resource.shader.ShaderProgram;
 import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
-import java.nio.FloatBuffer;
 import java.util.Objects;
 
 public class MigratedCameraNode extends RenderNode {

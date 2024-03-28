@@ -26,7 +26,7 @@ public class Node3D extends SceneNode {
             transform.identity();
         }
 
-        transform.translate(position).rotate(rotation).scale(scale);
+        transform.rotate(rotation).translate(position).scale(scale);
 
         super.process(deltaTime);
     }

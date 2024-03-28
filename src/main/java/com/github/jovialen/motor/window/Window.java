@@ -25,6 +25,7 @@ public class Window implements Surface {
     private String name;
     private Vector2i size;
     private boolean visible = true;
+    private boolean vsync = true;
 
     private long handle = MemoryUtil.NULL;
     private GLContext context;
@@ -52,6 +53,7 @@ public class Window implements Surface {
         context = new GLContext(this, debug);
 
         configureEvents();
+        setVsync(vsync);
         setVisible(visible);
     }
 
@@ -128,6 +130,20 @@ public class Window implements Surface {
             } else {
                 GLFW.glfwHideWindow(handle);
             }
+        }
+    }
+
+    public boolean isVsync() {
+        return vsync;
+    }
+
+    public void setVsync(boolean vsync) {
+        this.vsync = vsync;
+
+        if (isOpen()) {
+            GLFW.glfwMakeContextCurrent(handle);
+            GLFW.glfwSwapInterval(vsync ? 1 : 0);
+            GLFW.glfwMakeContextCurrent(0);
         }
     }
 
