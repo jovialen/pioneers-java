@@ -39,7 +39,7 @@ public class RunRenderGraphTask extends RenderGraphTask {
             GL11.glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
-            renderRoot.run();
+            renderRoot.run(GLState.getCurrent());
         }
 
         window.present();

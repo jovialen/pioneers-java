@@ -14,21 +14,18 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 public class MeshBuffer implements DestructibleResource {
-    private final BufferArray bufferArray;
-    private final VertexBuffer vertexBuffer = new VertexBuffer();
-    private final IndexBuffer indexBuffer = new IndexBuffer();
+    private final VertexBuffer vertexBuffer;
+    private final IndexBuffer indexBuffer;
 
     public MeshBuffer() {
         Logger.tag("RENDER").info("Creating mesh buffer {}", this);
-        bufferArray = new BufferArray(Vertex.LAYOUT);
-        bufferArray.setVertexBuffer(0, vertexBuffer);
-        bufferArray.setIndexBuffer(indexBuffer);
+        vertexBuffer = new VertexBuffer();
+        indexBuffer = new IndexBuffer();
     }
 
     @Override
     public void destroy() {
         Logger.tag("RENDER").info("Destroying mesh buffer {}", this);
-        bufferArray.destroy();
         vertexBuffer.destroy();
         indexBuffer.destroy();
     }
@@ -42,8 +39,12 @@ public class MeshBuffer implements DestructibleResource {
         }
     }
 
-    public BufferArray getBufferArray() {
-        return bufferArray;
+    public VertexBuffer getVertexBuffer() {
+        return vertexBuffer;
+    }
+
+    public IndexBuffer getIndexBuffer() {
+        return indexBuffer;
     }
 
     private FloatBuffer getVertices(MeshData meshData) {

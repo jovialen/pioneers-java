@@ -1,6 +1,7 @@
 package com.github.jovialen.motor.graph.render;
 
 import com.github.jovialen.motor.graph.Node;
+import com.github.jovialen.motor.render.context.GLState;
 import org.tinylog.Logger;
 
 public class RenderNode extends Node<RenderNode> {
@@ -19,8 +20,8 @@ public class RenderNode extends Node<RenderNode> {
         getChildren().forEach(RenderNode::create);
     }
 
-    public void run() {
-        getChildren().forEach(RenderNode::run);
+    public void run(GLState glState) {
+        getChildren().forEach((node) -> node.run(glState));
     }
 
     public void destroy() {

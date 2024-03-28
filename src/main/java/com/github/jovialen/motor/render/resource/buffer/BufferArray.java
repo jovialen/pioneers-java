@@ -16,19 +16,17 @@ import java.util.Map;
 
 public class BufferArray implements DestructibleResource {
     private final int id;
-    private final VertexLayout vertexLayout;
     private final Map<Integer, VertexBuffer> vertexBuffers = new HashMap<>();
     private IndexBuffer indexBuffer;
     private ShaderProgram specialised;
 
-    public BufferArray(VertexLayout vertexLayout) {
-        this(GL30.glGenVertexArrays(), vertexLayout);
+    public BufferArray() {
+        this(GL30.glGenVertexArrays());
     }
 
-    public BufferArray(int id, VertexLayout vertexLayout) {
+    public BufferArray(int id) {
         Logger.tag("GL").info("Creating buffer array {}", id);
         this.id = id;
-        this.vertexLayout = vertexLayout;
     }
 
     @Override
@@ -49,9 +47,11 @@ public class BufferArray implements DestructibleResource {
         vertexBuffers.put(index, vertexBuffer);
     }
 
-    public void specialiseToShader(ShaderProgram shaderProgram) {
+    public void format(ShaderProgram shaderProgram) {
         if (specialised == shaderProgram) return;
         specialised = shaderProgram;
+
+        VertexLayout vertexLayout = shaderProgram.getVertexLayout();
 
         try (GLState glState = GLState.pushSharedState()) {
             glState.bindBufferArray(id);
@@ -90,10 +90,6 @@ public class BufferArray implements DestructibleResource {
 
     public int getId() {
         return id;
-    }
-
-    public VertexLayout getVertexLayout() {
-        return vertexLayout;
     }
 
     public Map<Integer, VertexBuffer> getVertexBuffers() {
