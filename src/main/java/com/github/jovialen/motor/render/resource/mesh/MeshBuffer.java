@@ -2,7 +2,6 @@ package com.github.jovialen.motor.render.resource.mesh;
 
 import com.github.jovialen.motor.render.context.GLState;
 import com.github.jovialen.motor.render.resource.DestructibleResource;
-import com.github.jovialen.motor.render.resource.buffer.BufferArray;
 import com.github.jovialen.motor.render.resource.buffer.IndexBuffer;
 import com.github.jovialen.motor.render.resource.buffer.VertexBuffer;
 import com.github.jovialen.motor.utils.DataUtils;
