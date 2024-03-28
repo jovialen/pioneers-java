@@ -1,8 +1,8 @@
 package com.github.jovialen.motor.render.resource.mesh;
 
 import com.github.jovialen.motor.render.resource.layout.DataType;
-import com.github.jovialen.motor.render.resource.layout.VertexLayout;
-import com.github.jovialen.motor.render.resource.layout.VertexLayoutBuilder;
+import com.github.jovialen.motor.render.resource.layout.vertex.VertexLayout;
+import com.github.jovialen.motor.render.resource.layout.vertex.VertexLayoutBuilder;
 import com.github.jovialen.motor.utils.DataUtils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

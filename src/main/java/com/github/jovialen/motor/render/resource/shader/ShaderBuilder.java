@@ -1,6 +1,7 @@
 package com.github.jovialen.motor.render.resource.shader;
 
-import com.github.jovialen.motor.render.resource.layout.VertexLayout;
+import com.github.jovialen.motor.render.resource.layout.uniform.UniformLayout;
+import com.github.jovialen.motor.render.resource.layout.vertex.VertexLayout;
 import com.github.jovialen.motor.render.resource.mesh.Vertex;
 import org.tinylog.Logger;
 
@@ -15,6 +16,7 @@ public class ShaderBuilder implements ShaderSource {
     private ShaderModuleSource vertexShader;
     private ShaderModuleSource fragmentShader;
     private VertexLayout vertexLayout = Vertex.LAYOUT;
+    private UniformLayout uniformLayout = UniformLayout.EMPTY;
 
     public ShaderBuilder addVertexShader(Path path) {
         vertexShader = new ShaderModuleSource(readFile(path), ShaderStage.VERTEX);
@@ -31,6 +33,11 @@ public class ShaderBuilder implements ShaderSource {
         return this;
     }
 
+    public ShaderBuilder setUniforms(UniformLayout uniformLayout) {
+        this.uniformLayout = uniformLayout;
+        return this;
+    }
+
     @Override
     public List<ShaderModuleSource> getShaderModules() {
         return Stream.of(vertexShader, fragmentShader)
@@ -39,8 +46,13 @@ public class ShaderBuilder implements ShaderSource {
     }
 
     @Override
-    public VertexLayout getLayout() {
+    public VertexLayout getVertexLayout() {
         return vertexLayout;
+    }
+
+    @Override
+    public UniformLayout getUniformLayout() {
+        return uniformLayout;
     }
 
     private String readFile(Path path) {

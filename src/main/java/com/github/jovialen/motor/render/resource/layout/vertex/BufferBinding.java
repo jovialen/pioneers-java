@@ -1,4 +1,4 @@
-package com.github.jovialen.motor.render.resource.layout;
+package com.github.jovialen.motor.render.resource.layout.vertex;
 
 public class BufferBinding {
     public int offset;

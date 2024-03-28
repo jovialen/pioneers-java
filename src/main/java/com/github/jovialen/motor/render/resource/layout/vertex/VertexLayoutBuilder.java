@@ -1,4 +1,6 @@
-package com.github.jovialen.motor.render.resource.layout;
+package com.github.jovialen.motor.render.resource.layout.vertex;
+
+import com.github.jovialen.motor.render.resource.layout.DataType;
 
 public class VertexLayoutBuilder {
     private final VertexLayout vertexLayout = new VertexLayout();

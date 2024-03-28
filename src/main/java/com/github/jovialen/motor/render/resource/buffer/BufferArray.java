@@ -2,9 +2,9 @@ package com.github.jovialen.motor.render.resource.buffer;
 
 import com.github.jovialen.motor.render.context.GLState;
 import com.github.jovialen.motor.render.resource.DestructibleResource;
-import com.github.jovialen.motor.render.resource.layout.BufferBinding;
-import com.github.jovialen.motor.render.resource.layout.VertexAttribute;
-import com.github.jovialen.motor.render.resource.layout.VertexLayout;
+import com.github.jovialen.motor.render.resource.layout.vertex.BufferBinding;
+import com.github.jovialen.motor.render.resource.layout.vertex.VertexAttribute;
+import com.github.jovialen.motor.render.resource.layout.vertex.VertexLayout;
 import com.github.jovialen.motor.render.resource.shader.ShaderProgram;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;

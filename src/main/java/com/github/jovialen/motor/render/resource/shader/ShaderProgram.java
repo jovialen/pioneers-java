@@ -1,7 +1,8 @@
 package com.github.jovialen.motor.render.resource.shader;
 
 import com.github.jovialen.motor.render.resource.DestructibleResource;
-import com.github.jovialen.motor.render.resource.layout.VertexLayout;
+import com.github.jovialen.motor.render.resource.layout.uniform.UniformLayout;
+import com.github.jovialen.motor.render.resource.layout.vertex.VertexLayout;
 import org.lwjgl.opengl.GL20;
 import org.tinylog.Logger;
 
@@ -12,16 +13,20 @@ import java.util.Objects;
 public class ShaderProgram implements DestructibleResource {
     private final int id;
     private final VertexLayout vertexLayout;
+    private final UniformLayout uniformLayout;
     private final Map<String, Integer> attributeLocations = new HashMap<>();
+    private final ShaderUniforms uniforms;
 
-    public ShaderProgram(VertexLayout vertexLayout) {
-        this(GL20.glCreateProgram(), vertexLayout);
+    public ShaderProgram(VertexLayout vertexLayout, UniformLayout uniformLayout) {
+        this(GL20.glCreateProgram(), vertexLayout, uniformLayout);
     }
 
-    public ShaderProgram(int id, VertexLayout vertexLayout) {
+    public ShaderProgram(int id, VertexLayout vertexLayout, UniformLayout uniformLayout) {
         Logger.tag("GL").info("Creating shader program {}", id);
         this.id = id;
         this.vertexLayout = vertexLayout;
+        this.uniformLayout = uniformLayout;
+        this.uniforms = new ShaderUniforms(this, uniformLayout);
     }
 
     @Override
@@ -62,5 +67,13 @@ public class ShaderProgram implements DestructibleResource {
 
     public VertexLayout getVertexLayout() {
         return vertexLayout;
+    }
+
+    public UniformLayout getUniformLayout() {
+        return uniformLayout;
+    }
+
+    public ShaderUniforms getUniforms() {
+        return uniforms;
     }
 }

@@ -1,4 +1,6 @@
-package com.github.jovialen.motor.render.resource.layout;
+package com.github.jovialen.motor.render.resource.layout.vertex;
+
+import com.github.jovialen.motor.render.resource.layout.DataType;
 
 import java.util.ArrayList;
 import java.util.List;
