@@ -2,8 +2,7 @@ package com.github.jovialen.motor.render.resource;
 
 import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ResourceStorage<K, V extends DestructibleResource> implements DestructibleResource {
     private final ResourceProvider<K, V> provider;
@@ -24,5 +23,13 @@ public class ResourceStorage<K, V extends DestructibleResource> implements Destr
             storage.put(key, provider.provide(key));
         }
         return storage.get(key);
+    }
+
+    public Collection<V> values() {
+        return storage.values();
+    }
+
+    public Set<K> keySet() {
+        return storage.keySet();
     }
 }

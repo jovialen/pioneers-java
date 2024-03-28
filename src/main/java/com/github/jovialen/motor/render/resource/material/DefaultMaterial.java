@@ -17,6 +17,9 @@ public class DefaultMaterial implements CustomMaterial {
             .setVertexLayout(Vertex.LAYOUT)
             .setUniforms(new UniformLayoutBuilder()
                     .addUniform("uColor", DataType.FLOAT4)
+                    .addUniform("uModel", DataType.MAT4)
+                    .addUniform("uView", DataType.MAT4)
+                    .addUniform("uProjection", DataType.MAT4)
                     .build()
             );
 

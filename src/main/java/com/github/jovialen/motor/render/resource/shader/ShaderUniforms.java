@@ -3,10 +3,13 @@ package com.github.jovialen.motor.render.resource.shader;
 import com.github.jovialen.motor.render.context.GLState;
 import com.github.jovialen.motor.render.resource.layout.DataType;
 import com.github.jovialen.motor.render.resource.layout.uniform.UniformLayout;
+import com.github.jovialen.motor.utils.DataUtils;
 import org.joml.*;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 import org.tinylog.Logger;
 
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +17,7 @@ public class ShaderUniforms {
     private final ShaderProgram shaderProgram;
     private final UniformLayout uniformLayout;
     private final Map<String, Integer> locations = new HashMap<>();
+    private final FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
 
     public ShaderUniforms(ShaderProgram shaderProgram, UniformLayout uniformLayout) {
         this.shaderProgram = shaderProgram;
@@ -121,6 +125,22 @@ public class ShaderUniforms {
 
             glState.bindShaderProgram(shaderProgram.getId());
             GL20.glUniform4i(location, data.x, data.y, data.z, data.w);
+        }
+    }
+
+    public void setUniform(String name, Matrix4f data) {
+        if (!valid(name, DataType.MAT4)) {
+            Logger.tag("GL").warn("Setting uniform of type {} to MAT4", uniformLayout.getAttribute(name));
+        }
+
+        try (GLState glState = GLState.pushSharedState()) {
+            int location = getLocation(glState, name);
+
+            DataUtils.store(buffer, data);
+            buffer.flip();
+
+            glState.bindShaderProgram(shaderProgram.getId());
+            GL20.glUniformMatrix4fv(location, false, buffer);
         }
     }
 

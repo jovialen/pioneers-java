@@ -3,6 +3,7 @@ package com.github.jovialen.motor.render.context;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL40;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -74,6 +75,10 @@ public class GLState implements AutoCloseable {
 
     public void bindIndexBuffer(int id) {
         bindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, id);
+    }
+
+    public void bindUniformBuffer(int id) {
+        bindBuffer(GL40.GL_UNIFORM_BUFFER, id);
     }
 
     public void bindBuffer(int target, int id) {

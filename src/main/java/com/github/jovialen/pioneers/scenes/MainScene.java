@@ -14,6 +14,7 @@ public class MainScene implements SceneSource {
         cameraNode.name = "Camera";
 
         MeshNode meshNode = root.addChild(new MeshNode(root));
+        meshNode.position.z = -2;
 
         return root;
     }

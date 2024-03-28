@@ -25,11 +25,5 @@ public class CameraNode extends Node3D implements MigrationNode<MigratedCameraNo
     public void synchronize(MigratedCameraNode renderNode) {
         renderNode.camera.set(camera);
         renderNode.transform.set(transform);
-
-        Surface surface = Objects.requireNonNullElse(camera.target, getRoot().getWindow());
-        renderNode.projection.setPerspective((float) Math.toRadians(70),
-                surface.getAspect(),
-                camera.nearPlane,
-                camera.farPlane);
     }
 }

@@ -43,6 +43,7 @@ public class MigratedMeshNode extends RenderNode {
 
         bufferArray.format(program);
         material.apply(program.getUniforms());
+        program.getUniforms().setUniform("uModel", transform);
 
         GL11.glDrawElements(GL11.GL_TRIANGLES,
                 indexBuffer.getSize(),

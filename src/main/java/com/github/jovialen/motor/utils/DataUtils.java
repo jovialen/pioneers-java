@@ -44,4 +44,9 @@ public class DataUtils {
         data.get(buffer);
         buffer.position(buffer.position() + 4);
     }
+
+    public static void store(FloatBuffer dataBuffer, Matrix4f data) {
+        data.get(dataBuffer);
+        dataBuffer.position(dataBuffer.position() + 16);
+    }
 }
