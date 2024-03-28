@@ -13,6 +13,8 @@ public class MainScene implements SceneSource {
 
         CameraNode cameraNode = root.addChild(new CameraNode(root));
         cameraNode.name = "Camera";
+        cameraNode.rotation.rotateY((float) Math.toRadians(10));
+        cameraNode.position.z = 2;
 
         Node3D meshes = root.addChild(new Node3D(root));
         meshes.name = "Meshes";
