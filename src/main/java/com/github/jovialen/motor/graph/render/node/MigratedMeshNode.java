@@ -33,6 +33,13 @@ public class MigratedMeshNode extends RenderNode {
     }
 
     @Override
+    public void destroy() {
+        bufferArray.destroy();
+
+        super.destroy();
+    }
+
+    @Override
     public void run(GLState glState) {
         ShaderProgram program = getRoot().getRenderer().getShaders().get(material.getShader());
         MeshBuffer meshBuffer = getRoot().getRenderer().getMeshes().get(meshData);
